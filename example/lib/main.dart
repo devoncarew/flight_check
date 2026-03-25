@@ -12,10 +12,7 @@ class BezelExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Bezel Example',
-      home: _HomePage(),
-    );
+    return const MaterialApp(title: 'Bezel Example', home: _HomePage());
   }
 }
 
@@ -26,9 +23,7 @@ class _HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Bezel Example')),
-      body: const Center(
-        child: Text('Device preview active in debug mode.'),
-      ),
+      body: const Center(child: Text('Device preview active in debug mode.')),
     );
   }
 }
