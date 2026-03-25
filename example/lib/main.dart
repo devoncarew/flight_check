@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   Bezel.ensureInitialized();
+
   runApp(const BezelExampleApp());
 }
 
