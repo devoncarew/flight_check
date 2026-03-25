@@ -145,7 +145,7 @@ Unit tests in `test/binding/preview_flutter_view_test.dart`:
 - Verify `devicePixelRatio` returns the profile's value
 - Verify `padding.top` returns the profile's safe area top
 
-### Step 1.6 — PreviewPlatformDispatcher
+### Step 1.6 — PreviewPlatformDispatcher [done]
 
 Create `lib/src/binding/preview_platform_dispatcher.dart`.
 
