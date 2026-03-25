@@ -19,13 +19,20 @@ class PreviewFlutterView implements ui.FlutterView {
 
   // ── Spoofed members ───────────────────────────────────────────────────────
 
+  /// Returns a DPR that maps the real physical width onto the emulated logical
+  /// width, keeping the render surface in sync with the actual window.
+  ///
+  /// Using the real [physicalSize] (not a spoofed one) as the numerator means
+  /// the framework lays out the root widget at the actual window dimensions.
+  /// [PreviewOverlay] then scales and centers the device frame to fit.
   @override
-  double get devicePixelRatio => _controller.activeProfile.devicePixelRatio;
+  double get devicePixelRatio =>
+      _real.physicalSize.width / _controller.emulatedLogicalSize.width;
 
+  // physicalSize delegates to _real so the render surface matches the actual
+  // window. DPR above compensates so the framework lays out at emulated size.
   @override
-  ui.Size get physicalSize =>
-      _controller.emulatedLogicalSize *
-      _controller.activeProfile.devicePixelRatio;
+  ui.Size get physicalSize => _real.physicalSize;
 
   @override
   ui.ViewPadding get padding =>

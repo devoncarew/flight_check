@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:bezel/src/binding/preview_flutter_view.dart';
 import 'package:bezel/src/devices/device_database.dart';
-import 'package:bezel/src/devices/device_profile.dart';
 import 'package:bezel/src/preview_controller.dart';
 
 void main() {
@@ -24,26 +23,32 @@ void main() {
     controller.dispose();
   });
 
-  test('devicePixelRatio returns the active profile value', () {
-    final profile = DeviceDatabase.defaultProfile;
-    expect(view.devicePixelRatio, profile.devicePixelRatio);
+  test(
+    'devicePixelRatio maps real physical width onto emulated logical width',
+    () {
+      final realPhysical =
+          binding.platformDispatcher.implicitView!.physicalSize;
+      final emulatedLogical = controller.emulatedLogicalSize;
+      expect(
+        view.devicePixelRatio,
+        closeTo(realPhysical.width / emulatedLogical.width, 0.001),
+      );
+    },
+  );
+
+  test('physicalSize delegates to the real view', () {
+    final realPhysical = binding.platformDispatcher.implicitView!.physicalSize;
+    expect(view.physicalSize, realPhysical);
   });
 
-  test('physicalSize equals logical size × devicePixelRatio', () {
-    final profile = DeviceDatabase.defaultProfile;
-    final expected =
-        profile.logicalSizeForOrientation(DeviceOrientation.portrait) *
-        profile.devicePixelRatio;
-    expect(view.physicalSize, expected);
-  });
-
-  test('physicalSize updates when orientation toggles', () {
+  test('devicePixelRatio updates when orientation toggles', () {
+    final realPhysical = binding.platformDispatcher.implicitView!.physicalSize;
     controller.toggleOrientation();
-    final profile = controller.activeProfile;
-    final expected =
-        profile.logicalSizeForOrientation(DeviceOrientation.landscape) *
-        profile.devicePixelRatio;
-    expect(view.physicalSize, expected);
+    final emulatedLogical = controller.emulatedLogicalSize; // now landscape
+    expect(
+      view.devicePixelRatio,
+      closeTo(realPhysical.width / emulatedLogical.width, 0.001),
+    );
   });
 
   test('padding.top returns the profile safe area top', () {
