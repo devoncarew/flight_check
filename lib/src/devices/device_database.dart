@@ -97,6 +97,18 @@ const List<DeviceProfile> kDeviceProfiles = [
   ),
 
   DeviceProfile(
+    id: 'pixel_7a',
+    name: 'Google Pixel 7a',
+    platform: DevicePlatform.android,
+    logicalSize: Size(411, 914),
+    devicePixelRatio: 2.625,
+    safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 24),
+    safeAreaLandscape: EdgeInsets.only(bottom: 24),
+    frameStyle: DeviceFrameStyle.punchHole,
+    cutout: PunchHoleCutout(diameter: 11, topOffset: 13),
+  ),
+
+  DeviceProfile(
     id: 'pixel_8',
     name: 'Google Pixel 8',
     platform: DevicePlatform.android,
