@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart' show Theme, ThemeData, Brightness;
 import 'package:flutter/widgets.dart';
 
 import '../frame/device_frame_widget.dart';
 import '../preview_controller.dart';
+import 'preview_toolbar.dart';
 
 /// Background colour shown behind the device frame.
 const _kBackgroundColor = Color(0xFF121212);
@@ -40,6 +42,10 @@ class PreviewOverlay extends StatelessWidget {
             final emulated = controller.emulatedLogicalSize;
             final scale = _computeScale(available, emulated);
 
+            if (controller.passthroughMode) {
+              return child;
+            }
+
             return ColoredBox(
               color: _kBackgroundColor,
               child: Stack(
@@ -65,7 +71,23 @@ class PreviewOverlay extends StatelessWidget {
                     ),
                   ),
 
-                  // TODO(step 2.5): PreviewToolbar goes here.
+                  // Floating toolbar — top-center with a small top margin.
+                  // Wrapped in a dark Theme so toolbar widgets (Material,
+                  // IconButton, etc.) render correctly above the app's own
+                  // MaterialApp, which does not provide theme ancestors here.
+                  if (controller.toolbarVisible)
+                    Positioned(
+                      top: 8.0,
+                      left: 0,
+                      right: 0,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Theme(
+                          data: ThemeData(brightness: Brightness.dark),
+                          child: PreviewToolbar(controller: controller),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             );
