@@ -140,6 +140,10 @@ const List<DeviceProfile> kDeviceProfiles = [
   //   28px / 2.625 DPR ≈ 11dp diameter; 34px / 2.625 ≈ 13dp center Y.
   // Corner radius: ~22pt (community measurement; AOSP config_mainDisplayShape
   //   for lynx not publicly indexed at time of authoring).
+  // Safe area portrait: status bar 24dp covers the cutout
+  //   (cutout bottom = topOffset + radius = 13 + 5.5 = 18.5dp).
+  // Safe area landscape: punch hole rotates to left edge; left inset =
+  //   edgeOffset + diameter = 13 + 11 = 24dp.
   DeviceProfile(
     id: 'pixel_7a',
     name: 'Google Pixel 7a',
@@ -147,7 +151,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     logicalSize: Size(411, 914),
     devicePixelRatio: 2.625,
     safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 24),
-    safeAreaLandscape: EdgeInsets.only(bottom: 24),
+    safeAreaLandscape: EdgeInsets.only(left: 24, bottom: 24),
     screenCornerRadius: 22,
     cutout: PunchHoleCutout(diameter: 11, topOffset: 13),
   ),
@@ -158,6 +162,8 @@ const List<DeviceProfile> kDeviceProfiles = [
   //   28px / 2.625 DPR ≈ 11dp diameter; 34px / 2.625 ≈ 13dp center Y.
   // Corner radius: ~25pt (AOSP config_mainDisplayShape, shiba;
   //   physical arc ~65px / DPR 2.625 ≈ 25dp).
+  // Safe area portrait: cutout bottom = 13 + 5.5 = 18.5dp < 24dp status bar.
+  // Safe area landscape: left = edgeOffset + diameter = 13 + 11 = 24dp.
   DeviceProfile(
     id: 'pixel_8',
     name: 'Google Pixel 8',
@@ -165,7 +171,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     logicalSize: Size(411, 914),
     devicePixelRatio: 2.625,
     safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 24),
-    safeAreaLandscape: EdgeInsets.only(bottom: 24),
+    safeAreaLandscape: EdgeInsets.only(left: 24, bottom: 24),
     screenCornerRadius: 25,
     cutout: PunchHoleCutout(diameter: 11, topOffset: 13),
   ),
@@ -178,14 +184,20 @@ const List<DeviceProfile> kDeviceProfiles = [
   //   Diameter: 90px / 3.0 = 30dp. Center Y: 75.5px / 3.0 ≈ 25dp.
   // Corner radius: ~36pt (AOSP config_mainDisplayShape, shusky;
   //   physical arc ~108px / DPR 3.0 ≈ 36dp).
+  // Safe area portrait: AOSP config_mainBuiltInDisplayCutoutRectApproximation,
+  //   shusky: M 615.5,0 h 110 v 151 h -110 Z → height 151px / 3.0 = 50dp.
+  //   Cutout bottom = topOffset + radius = 25 + 15 = 40dp; status bar padded
+  //   to bounding-box height ≈ 50dp to clear the full hardware area.
+  // Safe area landscape: punch hole rotates to left edge;
+  //   left = edgeOffset + diameter = 25 + 30 = 55dp.
   DeviceProfile(
     id: 'pixel_8_pro',
     name: 'Google Pixel 8 Pro',
     platform: DevicePlatform.android,
     logicalSize: Size(448, 998),
     devicePixelRatio: 3.0,
-    safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 24),
-    safeAreaLandscape: EdgeInsets.only(bottom: 24),
+    safeAreaPortrait: EdgeInsets.only(top: 50, bottom: 24),
+    safeAreaLandscape: EdgeInsets.only(left: 55, bottom: 24),
     screenCornerRadius: 36,
     cutout: PunchHoleCutout(diameter: 30, topOffset: 25),
   ),
