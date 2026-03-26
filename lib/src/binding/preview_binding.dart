@@ -1,6 +1,7 @@
-import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
+import 'package:flutter/widgets.dart' show Widget, WidgetsFlutterBinding;
 
 import '../preview_controller.dart';
+import '../ui/preview_overlay.dart';
 import 'preview_platform_dispatcher.dart';
 
 /// A custom binding that installs [PreviewPlatformDispatcher], causing the
@@ -32,6 +33,20 @@ class PreviewBinding extends WidgetsFlutterBinding {
       'PreviewBinding.ensureInitialized() must be called before accessing controller.',
     );
     return _instance!._controller;
+  }
+
+  /// Injects [PreviewOverlay] inside the [View] widget so that [LayoutBuilder]
+  /// receives real layout constraints from the render tree.
+  ///
+  /// [attachRootWidget] is called with `View(child: app)` already assembled,
+  /// so overriding it would place [PreviewOverlay] *above* the [View] — outside
+  /// the render context. Overriding [wrapWithDefaultView] instead inserts the
+  /// overlay as the direct child of [View], where it is laid out normally.
+  @override
+  Widget wrapWithDefaultView(Widget rootWidget) {
+    return super.wrapWithDefaultView(
+      PreviewOverlay(controller: _controller, child: rootWidget),
+    );
   }
 
   /// Initialises the preview binding.
