@@ -206,7 +206,7 @@ Update `PreviewOverlay`:
 Update `computeScale` for the new layout (no frame padding, toolbar at bottom). Update
 tests.
 
-### Step 4.6 — Update device profiles with accurate geometry
+### Step 4.6 — Update device profiles with accurate geometry [done]
 
 **Android (Pixel):** Extract cutout geometry and screen corner radii from AOSP device tree
 configs (`config_mainBuiltInDisplayCutout`, `config_mainDisplayShape`). Convert physical
