@@ -237,6 +237,11 @@ Investigate implications:
 If viable, implement in `PreviewBinding` with clear documentation. If issues are found,
 document findings and recommend whether to proceed.
 
+### Step 4.8 - General cleanup
+
+- Verify the portrait and landscape safe areas for the included devices (the Pixel 7a, Pixel 8, and Pixel 8 Pro have already been verified)
+- Find a list of the most commonly used mobile devices and compare that to the devices we ship with
+
 ---
 
 ## Phase ordering summary

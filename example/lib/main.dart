@@ -5,21 +5,9 @@ import 'package:flutter/material.dart';
 
 // TODO: Have the settings persist.
 
-// TODO: Change the window to a neutral gray background.
+// TODO: Use neomorphism?
 
-// TODO: Move the controls to the bottom
-
-// TODO: adjust how/when we resize the window
-
-// TODO: better represent the notch areas (camera, corners, ...)
-
-// TODO: Don't try to draw faux phone edges
-
-// TODO: use neomorphism?
-
-// TODO: make the controls shorter
-
-// TODO: when switching devices, resize the window based on the current DBR
+// TODO: When switching devices, resize the window based on the current DBR
 
 // TODO: tell the app that we're on android or iOS (mock the platform)
 
@@ -56,6 +44,46 @@ class _HomePage extends StatefulWidget {
 class _HomePageState extends State<_HomePage> {
   int _selectedIndex = 0;
 
+  void _showDeviceInfo(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final platform = Theme.of(context).platform;
+    final size = mq.size;
+    final dpr = mq.devicePixelRatio;
+    final padding = mq.padding;
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Device info'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _InfoRow('Platform', platform.name),
+            _InfoRow(
+              'Screen size',
+              '${size.width.toStringAsFixed(0)} × '
+                  '${size.height.toStringAsFixed(0)} pt',
+            ),
+            _InfoRow('Device pixel ratio', dpr.toStringAsFixed(3)),
+            _InfoRow(
+              'Safe area',
+              'top ${padding.top.toStringAsFixed(0)}, '
+                  'bottom ${padding.bottom.toStringAsFixed(0)}, '
+                  'left ${padding.left.toStringAsFixed(0)}, '
+                  'right ${padding.right.toStringAsFixed(0)}',
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,13 +91,9 @@ class _HomePageState extends State<_HomePage> {
         title: const Text('Stellar'),
         centerTitle: true,
         actions: [
-          const IconButton(icon: Icon(Icons.search), onPressed: null),
-          PopupMenuButton(
-            itemBuilder: (_) => const [
-              PopupMenuItem(child: Text('Sort by name')),
-              PopupMenuItem(child: Text('Sort by distance')),
-              PopupMenuItem(child: Text('Settings')),
-            ],
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showDeviceInfo(context),
           ),
         ],
       ),
@@ -179,3 +203,33 @@ const _profileItems = [
   (Icons.language, 'Language'),
   (Icons.help_outline, 'Help & feedback'),
 ];
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow(this.label, this.value);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
+        ],
+      ),
+    );
+  }
+}
