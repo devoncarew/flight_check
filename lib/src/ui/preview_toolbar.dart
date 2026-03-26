@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../preview_controller.dart';
 
 /// Border radius applied to the pill-shaped toolbar container.
-const _kPillRadius = BorderRadius.all(Radius.circular(20.0));
+const _kPillRadius = BorderRadius.all(Radius.circular(14.0));
 
 /// Background colour of the toolbar pill — semi-transparent dark.
 const _kBackgroundColor = Color(0xCC1A1A1A);
@@ -38,7 +38,7 @@ class PreviewToolbar extends StatelessWidget {
           color: _kBackgroundColor,
           borderRadius: _kPillRadius,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -68,17 +68,17 @@ class _DeviceNameButton extends StatelessWidget {
       mouseCursor: SystemMouseCursors.click,
       onTap: controller.toggleDevicePicker,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 160.0),
+              constraints: const BoxConstraints(maxWidth: 140.0),
               child: Text(
                 controller.activeProfile.name,
                 style: const TextStyle(
                   color: _kForegroundColor,
-                  fontSize: 13.0,
+                  fontSize: 11.0,
                   fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -88,7 +88,7 @@ class _DeviceNameButton extends StatelessWidget {
             const Icon(
               Icons.arrow_drop_down,
               color: _kForegroundColor,
-              size: 16.0,
+              size: 14.0,
             ),
           ],
         ),
@@ -104,7 +104,7 @@ class _ToolbarDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 1.0,
-      height: 18.0,
+      height: 14.0,
       margin: const EdgeInsets.symmetric(horizontal: 4.0),
       color: const Color(0x55FFFFFF),
     );
@@ -123,8 +123,8 @@ class _OrientationButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.screen_rotation),
       color: _kForegroundColor,
-      iconSize: 18.0,
-      padding: const EdgeInsets.all(6.0),
+      iconSize: 14.0,
+      padding: const EdgeInsets.all(4.0),
       constraints: const BoxConstraints(),
       onPressed: controller.toggleOrientation,
     );
@@ -139,8 +139,8 @@ class _ReassembleButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.refresh),
       color: _kForegroundColor,
-      iconSize: 18.0,
-      padding: const EdgeInsets.all(6.0),
+      iconSize: 14.0,
+      padding: const EdgeInsets.all(4.0),
       constraints: const BoxConstraints(),
       onPressed: () => WidgetsBinding.instance.reassembleApplication(),
     );
@@ -163,8 +163,8 @@ class _PassthroughButton extends StatelessWidget {
       color: controller.passthroughMode
           ? _kForegroundColor.withAlpha(0x99)
           : _kForegroundColor,
-      iconSize: 18.0,
-      padding: const EdgeInsets.all(6.0),
+      iconSize: 14.0,
+      padding: const EdgeInsets.all(4.0),
       constraints: const BoxConstraints(),
       onPressed: controller.togglePassthrough,
     );
