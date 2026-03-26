@@ -44,6 +44,7 @@ class DeviceFrameWidget extends StatelessWidget {
         );
 
         return Stack(
+          textDirection: TextDirection.ltr,
           children: [
             // Device frame — fills the full layout bounds and sets the canvas
             // clip for anything rendered on top of it (including the child).

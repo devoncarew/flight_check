@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   Bezel.ensureInitialized();
-
+  // TODO: Make this easier to configure.
   Bezel.controller?.setProfile(DeviceDatabase.findById('pixel_7a')!);
 
   runApp(const BezelExampleApp());
@@ -16,11 +16,11 @@ class BezelExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Stellar',
-      theme: ThemeData.dark(),
+      // theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const _HomePage(),
+      home: _HomePage(),
     );
   }
 }
