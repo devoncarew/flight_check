@@ -8,8 +8,7 @@ const _kPillRadius = BorderRadius.all(Radius.circular(14.0));
 
 /// Compact pill-shaped toolbar rendered at the bottom of the preview overlay.
 ///
-/// Shows the active device name, an orientation toggle, a reassemble button,
-/// and a passthrough-mode toggle.
+/// Shows the active device name, an orientation toggle, and a reload button.
 class PreviewToolbar extends StatelessWidget {
   const PreviewToolbar({super.key, required this.controller});
 

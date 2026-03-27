@@ -159,11 +159,14 @@ class _DeviceItem extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Text(
-                    profile.name,
-                    style: const TextStyle(
-                      color: _kForegroundColor,
-                      fontSize: 14,
+                  Flexible(
+                    child: Text(
+                      profile.name,
+                      style: const TextStyle(
+                        color: _kForegroundColor,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 8),
