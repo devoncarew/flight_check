@@ -89,15 +89,15 @@ const List<DeviceProfile> kDeviceProfiles = [
   // No camera cutout — front camera sits in the top bezel.
   // Source: iosresolution.com, useyourloaf.com
   DeviceProfile(
-    id: 'ipad_10',
-    name: 'iPad (10th gen)',
+    id: 'ipad_a16',
+    name: 'iPad (A16)',
     platform: DevicePlatform.iOS,
     logicalSize: Size(820, 1180),
-    safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 20),
-    safeAreaLandscape: EdgeInsets.only(top: 20, bottom: 20),
+    safeAreaPortrait: EdgeInsets.only(top: 32, bottom: 20),
+    safeAreaLandscape: EdgeInsets.only(top: 32, bottom: 20),
     screenCornerRadius: 18,
     cutout: NoCutout(),
-    verified: false,
+    verified: true,
     tablet: true,
   ),
 
@@ -106,15 +106,15 @@ const List<DeviceProfile> kDeviceProfiles = [
   // No camera cutout — front camera in the top bezel.
   // Source: iosresolution.com, useyourloaf.com
   DeviceProfile(
-    id: 'ipad_mini_6',
-    name: 'iPad mini (6th gen)',
+    id: 'ipad_mini_a17',
+    name: 'iPad mini (A17 Pro)',
     platform: DevicePlatform.iOS,
     logicalSize: Size(744, 1133),
-    safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 20),
-    safeAreaLandscape: EdgeInsets.only(top: 20, bottom: 20),
+    safeAreaPortrait: EdgeInsets.only(top: 32, bottom: 20),
+    safeAreaLandscape: EdgeInsets.only(top: 32, bottom: 20),
     screenCornerRadius: 18,
     cutout: NoCutout(),
-    verified: false,
+    verified: true,
     tablet: true,
   ),
 

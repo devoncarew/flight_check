@@ -79,10 +79,10 @@ authoritative source.
 
 ### iOS tablets
 
-| Device              | ID            | Logical size | Corner r | Cutout | DPR | Safe area portrait | Safe area landscape | Data source | Verified |
-|---------------------|---------------|--------------|----------|--------|-----|--------------------|---------------------|-------------|----------|
-| iPad (10th gen)     | `ipad_10`     | 820 × 1180   | 18       | None   | 2.0 | T:24 B:20          | T:20 B:20           | community   | —        |
-| iPad mini (6th gen) | `ipad_mini_6` | 744 × 1133   | 18       | None   | 2.0 | T:24 B:20          | T:20 B:20           | community   | —        |
+| Device              | ID              | Logical size | Corner r | Cutout | DPR | Safe area portrait | Safe area landscape | Data source | Verified |
+|---------------------|-----------------|--------------|----------|--------|-----|--------------------|---------------------|-------------|----------|
+| iPad (A16)          | `ipad_a16`      | 820 × 1180   | 18       | None   | 2.0 | T:32 B:20          | T:32 B:20           | community   | yes      |
+| iPad mini (A17 Pro) | `ipad_mini_a17` | 744 × 1133   | 18       | None   | 2.0 | T:32 B:20          | T:32 B:20           | community   | yes      |
 
 ### Android phones
 
@@ -155,7 +155,7 @@ at the top-center of an ~411pt-wide display would be reasonably covered by this 
   variant.
 - **Budget Android notch** — `samsung_galaxy_a15` covers the Infinity-U teardrop
   notch form factor.
-- **Tablets** — `ipad_10` and `ipad_mini_6` cover the two most common iPad sizes.
+- **Tablets** — `ipad_a16` and `ipad_mini_a17` cover the two most common iPad sizes.
 
 ### Gaps and candidates for addition
 

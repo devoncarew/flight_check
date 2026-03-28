@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:bezel/src/devices/device_database.dart';
@@ -23,6 +25,39 @@ void main() {
     test('every profile id is unique', () {
       final ids = DeviceDatabase.all.map((p) => p.id).toList();
       expect(ids.toSet().length, ids.length);
+    });
+
+    test('prints device list in markdown format', () {
+      final devices = DeviceDatabase.all;
+
+      String sizeStr(DeviceProfile d) =>
+          '${d.logicalSize.width.toInt()} × ${d.logicalSize.height.toInt()}';
+
+      String platformStr(DeviceProfile d) =>
+          d.platform == DevicePlatform.iOS ? 'iOS' : 'Android';
+
+      final nameW = devices
+          .map((d) => d.name.length)
+          .fold('Device'.length, (w, l) => l > w ? l : w);
+      final platformW = devices
+          .map((d) => platformStr(d).length)
+          .fold('Platform'.length, (w, l) => l > w ? l : w);
+      final sizeW = devices
+          .map((d) => sizeStr(d).length)
+          .fold('Logical size'.length, (w, l) => l > w ? l : w);
+
+      final header =
+          '| ${'Device'.padRight(nameW)} | ${'Platform'.padRight(platformW)} | ${'Logical size'.padRight(sizeW)} |';
+      final divider =
+          '|-${'-' * nameW}-|-${'-' * platformW}-|-${'-' * sizeW}-|';
+
+      print(header);
+      print(divider);
+      for (final d in devices) {
+        print(
+          '| ${d.name.padRight(nameW)} | ${platformStr(d).padRight(platformW)} | ${sizeStr(d).padRight(sizeW)} |',
+        );
+      }
     });
   });
 
