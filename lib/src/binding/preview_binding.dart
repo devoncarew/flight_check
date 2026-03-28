@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, debugDefaultTargetPlatformOverride;
 import 'package:flutter/widgets.dart' show Widget, WidgetsFlutterBinding;
 import 'package:window_manager/window_manager.dart';
 
 import '../devices/device_database.dart';
+import '../devices/device_profile.dart' show DevicePlatform;
 import '../persistence/device_persistence.dart';
 import '../preview_controller.dart';
 import '../ui/preview_overlay.dart';
@@ -14,6 +17,36 @@ import 'preview_platform_dispatcher.dart';
 /// Installed by calling [ensureInitialized] before [runApp]. The binding is
 /// never installed in release/profile builds (tree-shaken out entirely) or
 /// when running on a real mobile device (iOS/Android).
+///
+/// ## Platform emulation
+///
+/// In addition to spoofing screen metrics, the binding sets
+/// [debugDefaultTargetPlatformOverride] to match the emulated device's
+/// platform (iOS or Android). This gives "pretty good" platform fidelity:
+///
+/// **Works well:**
+/// - Scroll physics: iOS gets elastic `BouncingScrollPhysics`; Android gets
+///   `ClampingScrollPhysics` with a stretch/glow overscroll indicator.
+/// - Page transitions: iOS uses the Cupertino slide-from-right transition;
+///   Android uses the Material zoom transition.
+/// - Haptic / sound feedback patterns.
+/// - Text selection toolbar items (iOS adds "Look Up" / "Search Web"; Android
+///   has different ordering and a Cut shortcut).
+/// - `ThemeData` platform value — correct from startup because the override is
+///   applied before `runApp`.
+///
+/// **Known fidelity limitations:**
+/// - **Keyboard shortcuts**: `DefaultTextEditingShortcuts` maps Cmd+key for
+///   iOS/macOS and Ctrl+key for Android/Linux/Windows. Overriding to Android
+///   on macOS (or iOS on Linux/Windows) breaks text-field shortcuts, because
+///   the shortcut set no longer matches the host keyboard.
+/// - **Back navigation**: Android code assumes a system back button; iOS code
+///   assumes a swipe-back gesture. Neither is available on desktop.
+/// - **Visual density**: switching platforms triggers a reassemble so
+///   `ThemeData` rebuilds, but any in-flight animations or ephemeral widget
+///   state is reset.
+/// - **Accessibility**: VoiceOver / TalkBack may receive semantics intended
+///   for the other platform. Not a concern for a dev tool.
 class PreviewBinding extends WidgetsFlutterBinding {
   // _controller must be a field declaration (not assigned in the constructor
   // body) so that it is available when super() calls initInstances(), which
@@ -32,25 +65,49 @@ class PreviewBinding extends WidgetsFlutterBinding {
     final savedId = loadLastDeviceId();
     if (savedId != null) {
       final profile = DeviceDatabase.findById(savedId);
-      if (profile != null) {
-        _controller.setProfile(profile);
-      }
+      if (profile != null) _controller.setProfile(profile);
     }
 
-    // Persist the device whenever the user changes it.
-    _controller.addListener(_saveProfile);
+    // Apply the platform override now, before runApp, so that ThemeData is
+    // constructed with the correct platform value from the start.
+    _lastEmulatedPlatform = _controller.activeProfile.platform;
+    _applyPlatformOverride(_lastEmulatedPlatform!);
+
+    // React to controller changes: persist device ID and update platform.
+    _controller.addListener(_onControllerChanged);
   }
 
   String? _lastSavedProfileId;
+  DevicePlatform? _lastEmulatedPlatform;
 
-  void _saveProfile() {
+  void _onControllerChanged() {
+    // Persist device ID when it changes.
     final id = _controller.activeProfile.id;
-    if (id == _lastSavedProfileId) {
-      return;
+    if (id != _lastSavedProfileId) {
+      _lastSavedProfileId = id;
+      saveLastDeviceId(id);
     }
 
-    _lastSavedProfileId = id;
-    saveLastDeviceId(id);
+    // Update the platform override when the emulated platform changes (e.g.
+    // switching from an iOS device to an Android device). A reassemble is
+    // required so that ThemeData — which caches `defaultTargetPlatform` at
+    // construction time — rebuilds with the new platform value. This resets
+    // ephemeral widget state (scroll positions, text field contents, etc.),
+    // which is acceptable for a platform switch.
+    final platform = _controller.activeProfile.platform;
+    if (platform != _lastEmulatedPlatform) {
+      _lastEmulatedPlatform = platform;
+      _applyPlatformOverride(platform);
+      reassembleApplication();
+    }
+  }
+
+  /// Sets [debugDefaultTargetPlatformOverride] to match [platform].
+  static void _applyPlatformOverride(DevicePlatform platform) {
+    debugDefaultTargetPlatformOverride = switch (platform) {
+      DevicePlatform.iOS => TargetPlatform.iOS,
+      DevicePlatform.android => TargetPlatform.android,
+    };
   }
 
   static PreviewBinding? _instance;

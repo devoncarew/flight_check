@@ -401,9 +401,12 @@ The screen clipping is hand-rolled `CustomPainter`, not an image asset dependenc
   sufficient for catching layout surprises before on-device testing
 - `MediaQuery.devicePixelRatio` reflects the derived window DPR, not the device's nominal
   DPR; apps that branch on this value may behave differently than on a real device
-- `defaultTargetPlatform` is not currently overridden to match the emulated device's
-  platform; Material adaptive widgets, scroll physics, and page transitions reflect the
-  host OS rather than the emulated device (this is under investigation)
+- `defaultTargetPlatform` is overridden to match the emulated device's platform, giving
+  correct scroll physics, page transitions, and haptic feedback patterns. Known
+  limitations: text-field keyboard shortcuts may not match the host keyboard when the
+  host OS and emulated platform differ (e.g. Android on macOS); back-navigation
+  assumptions (system back button on Android, swipe-back on iOS) cannot be satisfied on
+  desktop; switching platforms triggers a reassemble that resets ephemeral widget state
 
 ## Device coverage
 
