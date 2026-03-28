@@ -48,20 +48,20 @@ call; you'll want to initialize Bezel first.
 
 ## Supported devices
 
-| Device | Platform | Logical size |
-|---|---|---|
-| iPhone SE (3rd gen) | iOS | 375 × 667 |
-| iPhone 15 | iOS | 393 × 852 |
-| iPhone 15 Pro | iOS | 393 × 852 |
-| iPhone 15 Pro Max | iOS | 430 × 932 |
-| iPad (10th gen) | iOS | 820 × 1180 |
-| iPad mini (6th gen) | iOS | 744 × 1133 |
-| Samsung Galaxy S24 | Android | 411 × 915 |
-| Samsung Galaxy A15 | Android | 411 × 892 |
-| Google Pixel 8a | Android | 411 × 914 |
-| Google Pixel 9 | Android | 411 × 923 |
-| Google Pixel 10 | Android | 411 × 923 |
-| Google Pixel 10 Pro | Android | 410 × 914 |
+| Device              | Platform | Logical size |
+|---------------------|----------|--------------|
+| iPhone SE (3rd gen) | iOS      | 375 × 667    |
+| iPhone 15           | iOS      | 393 × 852    |
+| iPhone 15 Pro       | iOS      | 393 × 852    |
+| iPhone 15 Pro Max   | iOS      | 430 × 932    |
+| iPad (A16)          | iOS      | 820 × 1180   |
+| iPad mini (A17 Pro) | iOS      | 744 × 1133   |
+| Samsung Galaxy S24  | Android  | 360 × 780    |
+| Samsung Galaxy A15  | Android  | 411 × 892    |
+| Google Pixel 7a     | Android  | 411 × 914    |
+| Google Pixel 9      | Android  | 411 × 923    |
+| Google Pixel 10     | Android  | 411 × 923    |
+| Google Pixel 10 Pro | Android  | 410 × 914    |
 
 ## Known limitations
 
