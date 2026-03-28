@@ -52,7 +52,7 @@ class DevicePicker extends StatelessWidget {
           // outer dismissal layer.
           onTap: () {},
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 280, maxHeight: 480),
+            constraints: const BoxConstraints(maxWidth: 320, maxHeight: 560),
             child: Material(
               color: _kCardColor,
               borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -146,42 +146,62 @@ class _DeviceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = profile.logicalSize;
-
     final w = size.width.truncate();
     final h = size.height.truncate();
 
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Text(
-                      profile.name,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          profile.name,
+                          style: const TextStyle(
+                            color: _kForegroundColor,
+                            fontSize: 14,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${w}x$h',
+                        style: const TextStyle(
+                          color: _kHeaderColor,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (profile.description != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      profile.description!,
                       style: const TextStyle(
-                        color: _kForegroundColor,
-                        fontSize: 14,
+                        color: _kHeaderColor,
+                        fontSize: 11,
                       ),
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${w}x$h',
-                    style: const TextStyle(
-                      color: _kForegroundColor,
-                      fontSize: 10,
-                    ),
-                  ),
+                  ],
                 ],
               ),
             ),
-            if (isActive)
+            if (isActive) ...[
+              const SizedBox(width: 8),
               const Icon(Icons.check, color: _kForegroundColor, size: 16),
+            ],
           ],
         ),
       ),
