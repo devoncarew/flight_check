@@ -60,6 +60,13 @@ class DeviceProfile {
   /// Whether this device is a tablet.
   final bool tablet;
 
+  /// Short description of what this profile covers; displayed in the device
+  /// picker and included in generated documentation.
+  ///
+  /// Keep to one short sentence or a comma-separated phrase list. `null` means
+  /// no additional context is shown.
+  final String? description;
+
   const DeviceProfile({
     required this.id,
     required this.name,
@@ -71,6 +78,7 @@ class DeviceProfile {
     required this.cutout,
     required this.verified,
     this.tablet = false,
+    this.description,
   });
 
   /// Returns the logical screen size for [orientation].

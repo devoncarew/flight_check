@@ -91,8 +91,7 @@ authoritative source.
 | Samsung Galaxy S24  | `samsung_galaxy_s24` | 360 × 780    | 36       | PH d:10 @12pt | 3.0   | T:24 B:24          | B:24                | skin PNG (tool) / community | yes    |
 | Samsung Galaxy A15  | `samsung_galaxy_a15` | 411 × 892    | 42       | TD w:44 h:31pt | 2.625 | T:32 B:24         | L:32 B:24           | skin PNG (tool)           | yes      |
 | Google Pixel 7a     | `pixel_7a`           | 411 × 914    | 18       | PH d:25 @25pt | 2.625 | T:45 B:24          | L:45 T:28 B:24      | Android Emulator (adb)    | yes      |
-| Google Pixel 9      | `pixel_9`            | 411 × 923    | 74       | PH d:32 @33pt | 2.625 | T:66 B:24          | L:65 B:24           | AOSP device tree          | —        |
-| Google Pixel 10     | `pixel_10`           | 411 × 923    | 74       | PH d:32 @33pt | 2.625 | T:66 B:24          | L:65 B:24           | community (TensorG5-devs) | —        |
+| Google Pixel 10     | `pixel_10`           | 411 × 923    | 74       | PH d:32 @33pt | 2.625 | T:66 B:24          | L:65 B:24           | AOSP (Pixel 9) + community (TensorG5-devs) | —        |
 | Google Pixel 10 Pro | `pixel_10_pro`       | 410 × 914    | 73       | PH d:31 @33pt | 3.125 | T:65 B:24          | L:64 B:24           | community (TensorG5-devs) | —        |
 
 **Column key:** T = top, B = bottom, L = left, R = right inset (logical pixels). DI =
@@ -118,11 +117,11 @@ Island hardware cutout, same safe areas. Testing on one fully covers the other. 
 that `iphone_14_pro` (not yet in the database) shares the same 393 × 852 geometry with
 an identical Dynamic Island, so `iphone_15` would also serve as a proxy for it.
 
-### Group 2 — Pixel 9 / Pixel 10 (411 × 923, same panel)
+### Group 2 — Pixel 10 covers Pixel 9 (411 × 923, same panel)
 
-`pixel_9` and `pixel_10` use the same 1080 × 2424 px display panel. All geometry
-values are identical; the Pixel 10 entry exists for completeness and to match users who
-target it explicitly. Testing on `pixel_9` covers `pixel_10` completely.
+`pixel_10` uses the same 1080 × 2424 px display panel as the Pixel 9. All geometry
+values are identical; `pixel_9` has been removed from the database — `pixel_10` covers
+both generations.
 
 ### Group 3 — Pixel 7a / Pixel 8 (411 × 914, small punch hole)
 
@@ -149,8 +148,8 @@ at the top-center of an ~411pt-wide display would be reasonably covered by this 
   small-screen form factor.
 - **Mid-range Pixel punch hole (small)** — `pixel_7a` covers the small centered punch
   hole used in Pixel 7a / 8 / 8a class devices.
-- **Current Pixel punch hole (large)** — `pixel_9` / `pixel_10` cover the larger,
-  more prominent punch hole introduced in the Pixel 9 generation.
+- **Current Pixel punch hole (large)** — `pixel_10` covers the larger, more prominent
+  punch hole introduced in the Pixel 9 generation (identical panel).
 - **High-DPR Pixel** — `pixel_10_pro` (DPR 3.125) covers the higher-density Pro
   variant.
 - **Budget Android notch** — `samsung_galaxy_a15` covers the Infinity-U teardrop

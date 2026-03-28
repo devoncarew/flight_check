@@ -35,6 +35,22 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 0,
     cutout: NoCutout(),
     verified: true,
+    description: 'Flat-edge, no cutout, small screen — budget / upgrade path',
+  ),
+
+  // iPhone 14: 6.1" Super Retina XDR, traditional notch.
+  // PLACEHOLDER — geometry not yet verified; specs to be filled in.
+  DeviceProfile(
+    id: 'iphone_14',
+    name: 'iPhone 14',
+    platform: DevicePlatform.iOS,
+    logicalSize: Size(390, 844),
+    safeAreaPortrait: EdgeInsets.only(top: 47, bottom: 34),
+    safeAreaLandscape: EdgeInsets.only(left: 47, bottom: 21),
+    screenCornerRadius: 44,
+    cutout: NoCutout(), // TODO: replace with NotchCutout once implemented
+    verified: false,
+    description: 'Notch cutout, 390 × 844 — covers iPhone 12, 13, 14',
   ),
 
   // iPhone 15: 6.1" Super Retina XDR, Dynamic Island.
@@ -52,6 +68,8 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 44,
     cutout: DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
     verified: true,
+    description:
+        'Dynamic Island, 393 × 852 — covers iPhone 14 Pro, 15 Pro, 16, 16e',
   ),
 
   // iPhone 15 Pro: same screen size as iPhone 15, Pro chassis.
@@ -67,6 +85,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 44,
     cutout: DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
     verified: true,
+    description: 'Identical geometry to iPhone 15 — proxy for 14 Pro, 16',
   ),
 
   // iPhone 15 Pro Max: 6.7" variant; same DI cutout geometry.
@@ -82,9 +101,26 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 44,
     cutout: DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
     verified: true,
+    description: 'Dynamic Island, 430 × 932 — covers iPhone 15 Plus, 16 Plus',
   ),
 
-  // iPad (10th gen): thin-bezel design; rounded display corners visible.
+  // iPhone 16 Pro Max: 6.9" display, largest screen Apple has shipped.
+  // PLACEHOLDER — geometry not yet verified; specs to be filled in.
+  DeviceProfile(
+    id: 'iphone_16_pro_max',
+    name: 'iPhone 16 Pro Max',
+    platform: DevicePlatform.iOS,
+    logicalSize: Size(440, 956),
+    safeAreaPortrait: EdgeInsets.only(top: 62, bottom: 34),
+    safeAreaLandscape: EdgeInsets.only(left: 62, bottom: 20),
+    screenCornerRadius: 44,
+    cutout: DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
+    verified: false,
+    description:
+        'Largest iPhone screen, 440 × 956 — exposes wide-layout edge cases',
+  ),
+
+  // iPad (A16): thin-bezel design; rounded display corners visible.
   // Corner radius: ~18pt (community approximation).
   // No camera cutout — front camera sits in the top bezel.
   // Source: iosresolution.com, useyourloaf.com
@@ -99,10 +135,12 @@ const List<DeviceProfile> kDeviceProfiles = [
     cutout: NoCutout(),
     verified: true,
     tablet: true,
+    description: 'Standard iPad, 820 × 1180',
   ),
 
-  // iPad mini (6th gen): compact form factor with thin bezels.
-  // Corner radius: ~18pt (community approximation; same family as iPad 10).
+  // iPad mini (A17 Pro): compact form factor with thin bezels.
+  // Corner radius: ~18pt (community approximation; same family as iPad 10th
+  // gen).
   // No camera cutout — front camera in the top bezel.
   // Source: iosresolution.com, useyourloaf.com
   DeviceProfile(
@@ -116,6 +154,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     cutout: NoCutout(),
     verified: true,
     tablet: true,
+    description: 'Compact iPad, 744 × 1133',
   ),
 
   // ── Android ──────────────────────────────────────────────────────────────
@@ -136,6 +175,22 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 36, // measured from skin PNG
     cutout: PunchHoleCutout(diameter: 10, topOffset: 12),
     verified: true,
+    description: 'Flagship Samsung, 360 × 780 — covers S23, S24',
+  ),
+
+  // Samsung Galaxy A55 (mid-range): PLACEHOLDER — geometry not yet verified.
+  // Approximate logical size from community sources; specs to be filled in.
+  DeviceProfile(
+    id: 'samsung_galaxy_a55',
+    name: 'Samsung Galaxy A55',
+    platform: DevicePlatform.android,
+    logicalSize: Size(384, 854),
+    safeAreaPortrait: EdgeInsets.only(top: 24, bottom: 24),
+    safeAreaLandscape: EdgeInsets.only(bottom: 24),
+    screenCornerRadius: 36,
+    cutout: PunchHoleCutout(diameter: 10, topOffset: 12),
+    verified: false,
+    description: 'Mid-range Samsung A-series, ~384 × 854 — covers A54, A55',
   ),
 
   // Samsung Galaxy A15 (4G, SM-A155F, released Dec 2023): community
@@ -162,6 +217,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 42, // measured from skin PNG
     cutout: TeardropCutout(width: 44, height: 31, sideRadius: 13),
     verified: true,
+    description: 'Budget Samsung Infinity-U notch, 411 × 892 — covers A15, A25',
   ),
 
   // Pixel 7a (codename: lynx).
@@ -181,43 +237,22 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 18,
     cutout: PunchHoleCutout(diameter: 25, topOffset: 25),
     verified: true,
-  ),
-
-  // Pixel 9 (codename: tokay, in caimito repo).
-  // Cutout: AOSP config_mainBuiltInDisplayCutout, caimito/tokay device tree.
-  //   m 581.5,86.5 a 42,42 0 0 0 -84,0 42,42 0 0 0 84,0 z @left
-  //   Circle: center (539.5, 86.5)px physical, radius 42px physical.
-  //   Diameter: 84px / 2.625 = 32dp. Center Y: 86.5px / 2.625 ≈ 33dp.
-  // Corner radius: AOSP config_mainDisplayShape, tokay:
-  //   M 886.188,0.022 ... — path starts 193.8px from right edge on top.
-  //   193.8px / 2.625 ≈ 74dp.
-  // Safe area portrait: AOSP config_mainBuiltInDisplayCutoutRectApproximation,
-  //   tokay: m 484.5,0 h 110 v 173 h -110 z → height 173px / 2.625 ≈ 66dp.
-  // Safe area landscape: punch hole rotates to left edge;
-  //   left = topOffset + diameter = 33 + 32 = 65dp.
-  DeviceProfile(
-    id: 'pixel_9',
-    name: 'Google Pixel 9',
-    platform: DevicePlatform.android,
-    logicalSize: Size(411, 923),
-    safeAreaPortrait: EdgeInsets.only(top: 66, bottom: 24),
-    safeAreaLandscape: EdgeInsets.only(left: 65, bottom: 24),
-    screenCornerRadius: 74,
-    cutout: PunchHoleCutout(diameter: 32, topOffset: 33),
-    verified: false,
+    description: 'Mid-range Pixel, small punch hole — covers Pixel 7a, 8a',
   ),
 
   // Pixel 10 (codename: frankel, in muzel repo).
-  // Panel geometry is identical to the Pixel 9 (same 1080×2424px display).
   // Cutout: TensorG5-devs/device_google_muzel, frankel overlay.
   //   m 581.5,86 a 42,42 0 0 0 -84,0 42,42 0 0 0 84,0 z @left
   //   Circle: center (539.5, 86)px physical, radius 42px physical.
   //   Diameter: 84px / 2.625 = 32dp. Center Y: 86px / 2.625 ≈ 33dp.
-  // Corner radius: same panel as Pixel 9 → 74dp.
-  // Safe area portrait: same bounding box as Pixel 9 → 66dp.
+  // Corner radius: same panel as Pixel 9 (AOSP config_mainDisplayShape, tokay:
+  //   193.8px / 2.625 ≈ 74dp).
+  // Safe area portrait: AOSP config_mainBuiltInDisplayCutoutRectApproximation,
+  //   tokay: m 484.5,0 h 110 v 173 h -110 z → height 173px / 2.625 ≈ 66dp.
   // Safe area landscape: left = topOffset + diameter = 33 + 32 = 65dp.
   // Note: Google has not published Pixel 10 device trees to AOSP; data sourced
   //   from the community-maintained TensorG5-devs/device_google_muzel repo.
+  //   Panel geometry is identical to the Pixel 9 (same 1080×2424px display).
   DeviceProfile(
     id: 'pixel_10',
     name: 'Google Pixel 10',
@@ -228,6 +263,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 74,
     cutout: PunchHoleCutout(diameter: 32, topOffset: 33),
     verified: false,
+    description: 'Large punch hole, 411 × 923 — covers Pixel 9 and 10',
   ),
 
   // Pixel 10 Pro (codename: blazer, in muzel repo).
@@ -253,6 +289,7 @@ const List<DeviceProfile> kDeviceProfiles = [
     screenCornerRadius: 73,
     cutout: PunchHoleCutout(diameter: 31, topOffset: 33),
     verified: false,
+    description: 'High-DPR Pixel (3.125), 410 × 914',
   ),
 ];
 

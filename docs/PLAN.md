@@ -240,22 +240,8 @@ be satisfied on desktop; platform switch resets ephemeral widget state via reass
 + Renamed `Bezel.ensureInitialized()` => `Bezel.configure()`.
 + Consider having the currently selected device persist.
 + Have a script which will update the readme from the device database.
++ Add a 'similarTo' field to the DeviceProfile class.
+- Update the code to generate the device list in the readme.
+- Add iPhone 17
+- Finish valdating the devices.
 - Consider renaming from 'Bezel' to 'Flight Check' / flight_check.
-- Add a 'similarTo' field to the DeviceProfile class.
-
-### Step 4.9 - Device update
-
-TODO: Validate this list against docs/devices.md.
-
-+ replace the Pixel 7a with the Pixel 8a
-+ drop Pixel 8 pro
-+ add Pixel 9
-+ add Pixel 10
-+ add Pixel 10 Pro
-+ add Samsung Galaxy A15
-- add iPhone 14
-- add iPhone 17
-- add iPhone 17e
-- add iPhone Air
-- add iPhone 17 Pro
-- add iPhone 17 Pro Max

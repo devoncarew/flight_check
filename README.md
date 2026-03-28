@@ -40,28 +40,30 @@ If your app is already calling `WidgetsFlutterBinding.ensureInitialized()`,
 place the call to `Bezel.configure()` before the `WidgetsFlutterBinding`
 call; you'll want to initialize Bezel first.
 
-## Keyboard shortcuts
-
-| Action | MacOS | Linux / Windows |
-| --- | --- | --- |
-| Toggle orientation | ⌘L | Ctrl+L |
-
 ## Supported devices
 
 | Device              | Platform | Logical size |
 |---------------------|----------|--------------|
 | iPhone SE (3rd gen) | iOS      | 375 × 667    |
+| iPhone 14           | iOS      | 390 × 844    |
 | iPhone 15           | iOS      | 393 × 852    |
 | iPhone 15 Pro       | iOS      | 393 × 852    |
 | iPhone 15 Pro Max   | iOS      | 430 × 932    |
+| iPhone 16 Pro Max   | iOS      | 440 × 956    |
 | iPad (A16)          | iOS      | 820 × 1180   |
 | iPad mini (A17 Pro) | iOS      | 744 × 1133   |
 | Samsung Galaxy S24  | Android  | 360 × 780    |
+| Samsung Galaxy A55  | Android  | 384 × 854    |
 | Samsung Galaxy A15  | Android  | 411 × 892    |
 | Google Pixel 7a     | Android  | 411 × 914    |
-| Google Pixel 9      | Android  | 411 × 923    |
 | Google Pixel 10     | Android  | 411 × 923    |
 | Google Pixel 10 Pro | Android  | 410 × 914    |
+
+## Keyboard shortcuts
+
+| Action             | MacOS | Linux / Windows |
+| ------------------ | ----- | --------------- |
+| Toggle orientation | ⌘L    | Ctrl+L          |
 
 ## Known limitations
 
