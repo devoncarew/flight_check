@@ -195,9 +195,51 @@ class _DiscoverPage extends StatelessWidget {
               title: Text(item.$2),
               subtitle: Text(item.$3),
               trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => _DetailPage(item: item),
+                ),
+              ),
             ),
           ),
       ],
+    );
+  }
+}
+
+class _DetailPage extends StatelessWidget {
+  const _DetailPage({required this.item});
+
+  final (IconData, String, String) item;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final (icon, name, description) = item;
+    return Scaffold(
+      appBar: AppBar(
+        // Flutter's AppBar automatically inserts a BackButton here, which uses
+        // Icons.adaptive.arrow_back — a left-chevron on iOS and a left-arrow on
+        // Android — so the back affordance matches the emulated platform.
+        title: Text(name),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 24,
+          children: [
+            Icon(icon, size: 96, color: theme.colorScheme.primary),
+            Text(name, style: theme.textTheme.headlineSmall),
+            Text(
+              description,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
