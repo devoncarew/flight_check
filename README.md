@@ -79,6 +79,16 @@ call; you'll want to initialize Bezel first.
   than on a real device.
 - Flutter Web is not supported.
 
+`defaultTargetPlatform` is overridden to match the emulated device's platform,
+giving correct scroll physics, page transitions, and haptic feedback patterns.
+Known limitations:
+
+- text-field keyboard shortcuts may not match the host keyboard when the host OS
+  and emulated platform differ (e.g. Android on macOS)
+- back-navigation assumptions (system back button on Android, swipe-back on iOS)
+  cannot be satisfied on desktop
+- switching platforms triggers a reassemble that resets ephemeral widget state
+
 ## License
 
 BSD 3-Clause — see [LICENSE](LICENSE).

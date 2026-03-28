@@ -215,21 +215,21 @@ iosresolution.com). Dynamic Island dimensions from community measurements (~126�
 
 Add source comments in `device_database.dart` for each profile's data provenance.
 
-### Step 4.7 Investigate platform emulation (stretch)
+### Step 4.7 — Platform emulation [done]
 
-Research overriding `defaultTargetPlatform` to match the emulated device's platform
-(iOS device → `TargetPlatform.iOS`, Android → `TargetPlatform.android`). This would make
-Material adaptive widgets, scroll physics, and page transitions match the emulated device
-rather than the host OS.
+`PreviewBinding` sets `debugDefaultTargetPlatformOverride` to match the emulated
+device's platform (iOS → `TargetPlatform.iOS`, Android → `TargetPlatform.android`).
+Applied before `runApp` so `ThemeData` is constructed with the correct platform from
+the start. A `reassembleApplication()` call is triggered when switching between
+platforms so `ThemeData` rebuilds.
 
-Investigate implications:
-- Material vs Cupertino adaptive widgets
-- Scroll physics (bouncing vs glow overscroll)
-- Page transitions and back swipe behavior
-- Any binding-level complications
+**What works well:** scroll physics (elastic vs clamping), page transitions (Cupertino
+slide vs Material zoom), haptic feedback patterns, text-selection toolbar items,
+`VisualDensity`.
 
-If viable, implement in `PreviewBinding` with clear documentation. If issues are found,
-document findings and recommend whether to proceed.
+**Known limitations (documented in `DESIGN.md`):** keyboard shortcuts may break when
+the host OS and emulated platform differ; back-navigation platform assumptions cannot
+be satisfied on desktop; platform switch resets ephemeral widget state via reassemble.
 
 ### Step 4.8 - General cleanup
 
