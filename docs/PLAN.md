@@ -290,7 +290,7 @@ With control points from step 5.3, populate `SquircleBorder` entries for each
 iPhone family. Implement path building in `ScreenClipPainter`: reflect/rotate
 one corner's Bézier points to all four corners.
 
-### Step 5.5 — iPhone 14 notch: `PathCutout` class and rendering
+### Step 5.5 — iPhone 14 notch: `PathCutout` class and rendering [done]
 
 Add a `PathCutout` variant to `ScreenCutout` that stores raw Bézier segments
 from the sensor bar PDF. Implement rendering in `ScreenClipPainter`. Replace
