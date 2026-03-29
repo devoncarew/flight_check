@@ -18,7 +18,6 @@ void main() {
       safeAreaLandscape: const EdgeInsets.only(left: 59, right: 59, bottom: 21),
       screenCornerRadius: 0,
       cutout: cutout,
-      verified: false,
     );
   }
 
