@@ -20,7 +20,7 @@ const Color kPreviewShadowLight = Color(0xFF7A7A84);
 const Color kPreviewBorder = Color.fromARGB(255, 122, 122, 140);
 
 /// Padding (logical pixels) between the device previs and the toolbar row.
-const double kPreviewSpacing = 12;
+const double kPreviewSpacing = 10;
 
 /// Reserved height for the toolbar row below the device frame.
 const double kToolbarHeight = 32;
