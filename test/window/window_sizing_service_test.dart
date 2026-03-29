@@ -27,8 +27,20 @@ void main() {
         profile,
         DeviceOrientation.portrait,
       );
-      expect(size.width, inInclusiveRange(profile.logicalSize.width * 0.88, profile.logicalSize.width));
-      expect(size.height, inInclusiveRange(profile.logicalSize.height * 0.88, profile.logicalSize.height));
+      expect(
+        size.width,
+        inInclusiveRange(
+          profile.logicalSize.width * 0.88,
+          profile.logicalSize.width,
+        ),
+      );
+      expect(
+        size.height,
+        inInclusiveRange(
+          profile.logicalSize.height * 0.88,
+          profile.logicalSize.height,
+        ),
+      );
     });
 
     test('landscape target uses swapped emulated dimensions', () {
@@ -37,8 +49,20 @@ void main() {
         profile,
         DeviceOrientation.landscape,
       );
-      expect(landscape.width, inInclusiveRange(profile.logicalSize.height * 0.88, profile.logicalSize.height));
-      expect(landscape.height, inInclusiveRange(profile.logicalSize.width * 0.88, profile.logicalSize.width));
+      expect(
+        landscape.width,
+        inInclusiveRange(
+          profile.logicalSize.height * 0.88,
+          profile.logicalSize.height,
+        ),
+      );
+      expect(
+        landscape.height,
+        inInclusiveRange(
+          profile.logicalSize.width * 0.88,
+          profile.logicalSize.width,
+        ),
+      );
     });
   });
 
