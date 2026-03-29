@@ -68,7 +68,7 @@ class DeviceProfile {
   /// no additional context is shown.
   final String? description;
 
-  const DeviceProfile({
+  DeviceProfile({
     required this.id,
     required this.name,
     required this.platform,
