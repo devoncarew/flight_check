@@ -32,25 +32,30 @@ Future<void> main(List<String> args) async {
 
   final dir = Directory(_kDeviceTypesDir);
   if (!dir.existsSync()) {
-    stderr.writeln('CoreSimulator DeviceTypes directory not found:\n  $_kDeviceTypesDir');
+    stderr.writeln(
+      'CoreSimulator DeviceTypes directory not found:\n  $_kDeviceTypesDir',
+    );
     exit(1);
   }
 
-  final bundles = dir
-      .listSync()
-      .whereType<Directory>()
-      .where((d) => d.path.endsWith('.simdevicetype'))
-      .where(
-        (d) =>
-            filter == null ||
-            d.path.split('/').last.toLowerCase().contains(filter),
-      )
-      .toList()
-    ..sort((a, b) => a.path.compareTo(b.path));
+  final bundles =
+      dir
+          .listSync()
+          .whereType<Directory>()
+          .where((d) => d.path.endsWith('.simdevicetype'))
+          .where(
+            (d) =>
+                filter == null ||
+                d.path.split('/').last.toLowerCase().contains(filter),
+          )
+          .toList()
+        ..sort((a, b) => a.path.compareTo(b.path));
 
   if (bundles.isEmpty) {
-    stderr.writeln('No .simdevicetype bundles found'
-        '${filter != null ? ' matching "$filter"' : ''}');
+    stderr.writeln(
+      'No .simdevicetype bundles found'
+      '${filter != null ? ' matching "$filter"' : ''}',
+    );
     exit(1);
   }
 
@@ -60,8 +65,7 @@ Future<void> main(List<String> args) async {
 }
 
 Future<void> _processBundle(Directory bundle) async {
-  final name =
-      bundle.path.split('/').last.replaceAll('.simdevicetype', '');
+  final name = bundle.path.split('/').last.replaceAll('.simdevicetype', '');
   final resources = Directory('${bundle.path}/Contents/Resources');
   if (!resources.existsSync()) return;
 
@@ -77,9 +81,11 @@ Future<void> _processBundle(Directory bundle) async {
   final logH = (physH / scale).round();
 
   print('## $name');
-  print('   Physical: ${physW.toInt()} × ${physH.toInt()} px  '
-      '| Scale: ${scale}x  '
-      '| Logical: $logW × $logH pt');
+  print(
+    '   Physical: ${physW.toInt()} × ${physH.toInt()} px  '
+    '| Scale: ${scale}x  '
+    '| Logical: $logW × $logH pt',
+  );
 
   // ── Corner radius from framebuffer mask ──────────────────────────────────
 
@@ -95,8 +101,10 @@ Future<void> _processBundle(Directory bundle) async {
       );
       if (radiusPt != null) {
         final radiusPx = radiusPt * scale;
-        print('   Corner radius: ${radiusPt.toStringAsFixed(1)} pt  '
-            '(${radiusPx.toStringAsFixed(1)} px physical)');
+        print(
+          '   Corner radius: ${radiusPt.toStringAsFixed(1)} pt  '
+          '(${radiusPx.toStringAsFixed(1)} px physical)',
+        );
       } else {
         print('   Corner radius: could not extract from $fbId.pdf');
       }
@@ -178,13 +186,17 @@ Future<void> _printSensorBar(
   final stream = await _extractPathStream(pdfFile);
 
   if (stream == null || stream.trim() == 'q Q') {
-    print('   Sensor bar ($sensorBarName): empty — Dynamic Island (drawn in code)');
+    print(
+      '   Sensor bar ($sensorBarName): empty — Dynamic Island (drawn in code)',
+    );
     return;
   }
 
   if (mediaBox != null) {
-    print('   Sensor bar ($sensorBarName): '
-        'MediaBox ${mediaBox[2].toStringAsFixed(0)} × ${mediaBox[3].toStringAsFixed(0)} pt');
+    print(
+      '   Sensor bar ($sensorBarName): '
+      'MediaBox ${mediaBox[2].toStringAsFixed(0)} × ${mediaBox[3].toStringAsFixed(0)} pt',
+    );
   }
 
   // Compute bounding box of all numeric pairs in the path.
@@ -192,10 +204,12 @@ Future<void> _printSensorBar(
   if (bounds != null) {
     final w = bounds[2] - bounds[0];
     final h = bounds[3] - bounds[1];
-    print('   Notch path bounds: '
-        '${w.toStringAsFixed(1)} × ${h.toStringAsFixed(1)} pt  '
-        '(x: ${bounds[0].toStringAsFixed(1)}–${bounds[2].toStringAsFixed(1)}, '
-        'y: ${bounds[1].toStringAsFixed(1)}–${bounds[3].toStringAsFixed(1)})');
+    print(
+      '   Notch path bounds: '
+      '${w.toStringAsFixed(1)} × ${h.toStringAsFixed(1)} pt  '
+      '(x: ${bounds[0].toStringAsFixed(1)}–${bounds[2].toStringAsFixed(1)}, '
+      'y: ${bounds[1].toStringAsFixed(1)}–${bounds[3].toStringAsFixed(1)})',
+    );
   }
 
   // Print the raw path for further analysis.
@@ -324,10 +338,13 @@ Future<List<double>?> _extractMediaBox(File pdfFile) async {
 
 /// Parses a plist file by converting it to JSON via `plutil`.
 Future<Map<String, dynamic>?> _parsePlist(String path) async {
-  final result = await Process.run(
-    'plutil',
-    ['-convert', 'json', '-o', '-', path],
-  );
+  final result = await Process.run('plutil', [
+    '-convert',
+    'json',
+    '-o',
+    '-',
+    path,
+  ]);
   if (result.exitCode != 0) return null;
   try {
     return jsonDecode(result.stdout as String) as Map<String, dynamic>;
