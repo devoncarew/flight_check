@@ -58,9 +58,6 @@ class DeviceProfile {
   /// Camera cutout geometry in portrait orientation.
   final ScreenCutout cutout;
 
-  /// TODO: Delete this once all devices are verified.
-  final bool verified;
-
   /// Whether this device is a tablet.
   final bool tablet;
 
@@ -80,7 +77,6 @@ class DeviceProfile {
     required this.safeAreaLandscape,
     required this.screenCornerRadius,
     required this.cutout,
-    required this.verified,
     this.tablet = false,
     this.description,
   });

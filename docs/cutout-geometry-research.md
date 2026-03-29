@@ -132,6 +132,74 @@ adapts to device corners at runtime but does not expose the underlying radius.
 
 ---
 
+## iOS Simulator `.simdevicetype` Bundles
+
+The iOS Simulator ships with `.simdevicetype` bundles under:
+
+```
+/Library/Developer/CoreSimulator/Profiles/DeviceTypes/
+```
+
+Each bundle contains `Contents/Resources/`:
+
+| File | Contents |
+|---|---|
+| `profile.plist` | Device metadata: physical dimensions, scale, file references |
+| `{UUID}.pdf` (path from `framebufferMask` key) | Screen outline path in **physical pixels** |
+| `{name}.pdf` (path from `sensorBarImage` key) | Notch/sensor bar path in **logical points** |
+
+### Extracting Corner Radii from `framebufferMask`
+
+The framebuffer mask PDF contains a FlateDecode-compressed path stream describing the
+screen outline in **physical pixels** (MediaBox matches physical resolution). The path
+traces the screen starting at the top edge, curves around each corner, and closes.
+
+To find the corner radius:
+1. Find all `l` (lineto) coordinates on the top edge (y == screen_height_px).
+2. The last such x-coordinate before the corner curve is the tangent point.
+3. `corner_radius_px = screen_width_px - tangent_x`
+4. `corner_radius_pt = corner_radius_px / scale`
+
+Corner radii extracted from Simulator framebuffer PDFs (as of Xcode 16 / early 2026):
+
+| Device family | Logical size | Scale | Corner radius (px) | Corner radius (pt) | Current DB value |
+|---|---|---|---|---|---|
+| iPhone 12, 12 Pro, 13, 14 | 390 × 844 | 3x | ~160 px | **~53 pt** | 44 pt |
+| iPhone 15, 15 Pro, 16 | 393 × 852 | 3x | ~183 px | **~61 pt** | 44 pt |
+| iPhone 16 Pro | 402 × 874 | 3x | ~206 px | **~69 pt** | 44 pt (n/a) |
+| iPhone 17 Pro Max | 440 × 956 | 3x | ~207 px | **~69 pt** | 44 pt |
+
+**These values are significantly larger than the 44pt currently in the database.** The
+current 44pt figure is a widely-cited community approximation that appears to represent
+the inner corner radius of the glass, not the outer display radius. The Simulator PDFs
+contain the authoritative screen-clip geometry. The database should be updated once
+the visual difference is validated.
+
+Note: Apple uses squircle (superellipse) curves for screen corners, not circular arcs.
+The radius extracted here approximates the circular arc radius that best fits the
+squircle tangent point; the actual path is subtly different.
+
+### Notch Geometry from `sensorBarImage`
+
+The sensor bar PDF contains the notch or Dynamic Island shape:
+
+- **Pre-Dynamic Island devices** (iPhone X–14): contains a FlateDecode path stream
+  with the notch Bezier path. MediaBox dimensions appear to be in **logical points**
+  and represent the notch bounding area only (not the full screen width).
+- **Dynamic Island devices** (iPhone 14 Pro and later): sensor bar PDF contains only
+  `q Q` (empty). The DI shape is drawn programmatically by the Simulator; no path
+  data is stored here.
+
+iPhone 13 / iPhone 14 share the same sensor bar PDF (`sensor_bar_class_03` /
+`sensor_bar_class_04`). The notch PDF has MediaBox `0 0 176 34`, meaning the notch
+area is approximately **176 pt wide and 34 pt tall** in logical points. The Bezier
+path data contains concave ear arcs (squircles) where the notch meets the display edge.
+
+The tool `tool/extract_simdevicetype.dart` can extract and print both the corner
+radius and the raw sensor bar path data for any Simulator device.
+
+---
+
 ## Rounded Screen Corners
 
 ### Android
@@ -140,10 +208,9 @@ describing the full screen outline including corner curves. This is authoritativ
 It is also in physical pixels (divide by DPR to get dp).
 
 ### iOS
-Not officially published. The design community approximates corner radii by overlaying
-circles on device screenshots. Common cited values:
-- iPhone 12 and later: ~47pt outer corner radius, ~39pt inner (screen) corner radius
-- Figma device mockup files from Apple's design resources use these approximations
+The `framebufferMask` PDF in each `.simdevicetype` bundle (see above) is authoritative.
+Community measurements of ~47pt were approximations; Simulator data shows ~53–69pt
+depending on generation (see table above).
 
 ---
 
