@@ -46,14 +46,14 @@ call; you'll want to initialize Bezel first.
 | --- | --- | --- | --- |
 | iPhone SE (3rd gen) | 375 × 667 | iOS | Flat-edge, no cutout, small screen — budget / upgrade path |
 | iPhone 14 | 390 × 844 | iOS | Notch, 390 × 844 — covers iPhone 12, 13, 14 |
-| iPhone 15 | 393 × 852 | iOS | Dynamic Island, 393 × 852 — covers iPhone 14 Pro, 15 Pro, 16, 16e |
-| iPhone 15 Pro | 393 × 852 | iOS | Identical geometry to iPhone 15 — proxy for 14 Pro, 16 |
+| iPhone 15 | 393 × 852 | iOS | Dynamic Island, 393 × 852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e, 17 |
 | iPhone 15 Pro Max | 430 × 932 | iOS | Dynamic Island, 430 × 932 — covers iPhone 15 Plus, 16 Plus |
-| iPhone 17 Pro Max | 440 × 956 | iOS | Largest iPhone screen, 440 × 956 — exposes wide-layout edge cases |
+| iPhone 17 | 393 × 852 | iOS | Current standard iPhone, 393 × 852 — same geometry as iPhone 15 and 16 |
+| iPhone 17 Pro Max | 440 × 956 | iOS | Largest iPhone screen, 440 × 956 |
 | Samsung Galaxy A15 | 411 × 892 | Android | Budget Samsung Infinity-U notch, 411 × 892 — covers A15, A25 |
 | Samsung Galaxy A55 | 384 × 854 | Android | Mid-range Samsung A-series, ~384 × 854 — covers A54, A55 |
 | Samsung Galaxy S24 | 360 × 780 | Android | Flagship Samsung, 360 × 780 — covers S23, S24 |
-| Google Pixel 7a | 411 × 914 | Android | Mid-range Pixel, small punch hole — covers Pixel 7a, 8a |
+| Google Pixel 7a | 411 × 914 | Android | Mid-range Pixel, small punch hole — covers Pixel 7a, 8, 8a |
 | Google Pixel 10 | 411 × 923 | Android | Large punch hole, 411 × 923 — covers Pixel 9 and 10 |
 | Google Pixel 10 Pro | 410 × 914 | Android | High-DPR Pixel (3.125), 410 × 914 |
 | iPad mini (A17 Pro) | 744 × 1133 | iOS / tablet | Compact iPad, 744 × 1133 |

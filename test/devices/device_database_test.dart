@@ -28,21 +28,13 @@ void main() {
     });
 
     test('prints device list in markdown format', () {
+      // Run with `flutter test test/devices/device_database_test.dart`.
+
       String size(DeviceProfile d) =>
           '${d.logicalSize.width.toInt()} × ${d.logicalSize.height.toInt()}';
 
       String platform(DeviceProfile d) =>
           d.platform.label + (d.tablet ? ' / tablet' : '');
-
-      final iOS = DeviceDatabase.all
-          .where((d) => d.platform == DevicePlatform.iOS && !d.tablet)
-          .toList();
-      final android = DeviceDatabase.all
-          .where((d) => d.platform == DevicePlatform.android && !d.tablet)
-          .toList();
-      final tablets = DeviceDatabase.all.where((d) => d.tablet).toList();
-
-      final devices = [...iOS, ...android, ...tablets];
 
       print('## Supported devices');
       print('');
@@ -50,7 +42,7 @@ void main() {
       print('| Device | Size | Platform | Device category |');
       print('| --- | --- | --- | --- |');
 
-      for (final device in devices) {
+      for (final device in DeviceDatabase.all) {
         print(
           '| ${device.name} | ${size(device)} | '
           '${platform(device)} | ${device.description ?? ''} |',
