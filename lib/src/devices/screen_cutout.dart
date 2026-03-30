@@ -137,6 +137,65 @@ final class PunchHoleCutout extends ScreenCutout {
   }
 }
 
+/// A notch cutout described by Bézier path data from the iOS Simulator
+/// sensor-bar PDF.
+///
+/// The path is encoded as a flat list of doubles in [ops]. Each operation
+/// begins with an opcode followed by its arguments:
+///
+/// | Opcode | Args | Meaning |
+/// |--------|------|---------|
+/// | [kMoveTo]  | x, y | PDF moveto |
+/// | [kLineTo]  | x, y | PDF lineto |
+/// | [kCubicTo] | cp1x, cp1y, cp2x, cp2y, x, y | PDF curveto |
+/// | [kClose]   | — | close path |
+///
+/// Coordinates are in **PDF convention**: y = 0 at the bottom of the
+/// MediaBox, y increases upward. The path is horizontally centered on the
+/// screen when rendered. [mediaBoxWidth] × [mediaBoxHeight] gives the
+/// bounding area.
+///
+/// See `tool/extract_simdevicetype.dart` for how this data is extracted.
+final class PathCutout extends ScreenCutout {
+  /// Width of the PDF MediaBox in logical points.
+  final double mediaBoxWidth;
+
+  /// Height of the PDF MediaBox in logical points (= notch depth from screen
+  /// top to the bottom of the cutout shape).
+  final double mediaBoxHeight;
+
+  /// Flat list of path operations. Each entry is either an opcode constant
+  /// ([kMoveTo], [kLineTo], [kCubicTo], [kClose]) or a coordinate argument
+  /// following the preceding opcode.
+  final List<double> ops;
+
+  const PathCutout({
+    required this.mediaBoxWidth,
+    required this.mediaBoxHeight,
+    required this.ops,
+  });
+
+  // Opcode constants used in [ops].
+  static const double kMoveTo = 1;
+  static const double kLineTo = 2;
+  static const double kCubicTo = 3;
+  static const double kClose = 4;
+
+  @override
+  ScreenCutout rotatedForLandscape(Size portraitScreenSize) => SideCutout(
+    // The notch depth (mediaBoxHeight) becomes the side-cutout width;
+    // the notch width (mediaBoxWidth) becomes the side-cutout height.
+    size: Size(mediaBoxHeight, mediaBoxWidth),
+    // The notch is centered on the portrait width; after rotation that
+    // x-centre becomes the landscape y-centre.
+    centerOffset: portraitScreenSize.width / 2,
+    edgeOffset: 0,
+    // Use half of the notch depth as a circular approximation for the
+    // squircle corners of the rotated notch.
+    cornerRadius: mediaBoxHeight / 2,
+  );
+}
+
 /// A cutout on the left edge, produced by landscape rotation of a portrait
 /// cutout via [ScreenCutout.rotatedForLandscape].
 ///

@@ -240,7 +240,58 @@ Path _buildCutoutPath(ScreenCutout cutout, Rect screenRect) {
           Radius.circular(cornerRadius),
         ),
       ),
+    PathCutout(:final mediaBoxWidth, :final mediaBoxHeight, :final ops) =>
+      _buildPathCutoutPath(
+        screenRect,
+        mediaBoxWidth: mediaBoxWidth,
+        mediaBoxHeight: mediaBoxHeight,
+        ops: ops,
+      ),
   };
+}
+
+/// Replays the [PathCutout.ops] list as a Flutter [Path], converting from PDF
+/// coordinates (y=0 at the bottom of the MediaBox) to Flutter screen
+/// coordinates (y=0 at the top of [screenRect]).
+///
+/// The path is horizontally centered on [screenRect].
+Path _buildPathCutoutPath(
+  Rect screenRect, {
+  required double mediaBoxWidth,
+  required double mediaBoxHeight,
+  required List<double> ops,
+}) {
+  // Horizontal offset to centre the MediaBox on the screen.
+  final offsetX = screenRect.left + (screenRect.width - mediaBoxWidth) / 2;
+  final offsetY = screenRect.top;
+
+  // Convert a PDF x coordinate to Flutter screen x.
+  double fx(double pdfX) => offsetX + pdfX;
+  // Convert a PDF y coordinate to Flutter screen y (flip axis).
+  double fy(double pdfY) => offsetY + mediaBoxHeight - pdfY;
+
+  final path = Path();
+  var i = 0;
+  while (i < ops.length) {
+    final op = ops[i++];
+    if (op == PathCutout.kMoveTo) {
+      path.moveTo(fx(ops[i++]), fy(ops[i++]));
+    } else if (op == PathCutout.kLineTo) {
+      path.lineTo(fx(ops[i++]), fy(ops[i++]));
+    } else if (op == PathCutout.kCubicTo) {
+      path.cubicTo(
+        fx(ops[i++]),
+        fy(ops[i++]),
+        fx(ops[i++]),
+        fy(ops[i++]),
+        fx(ops[i++]),
+        fy(ops[i++]),
+      );
+    } else if (op == PathCutout.kClose) {
+      path.close();
+    }
+  }
+  return path;
 }
 
 // Builds the clip path for a TeardropCutout centred at the top of
