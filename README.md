@@ -54,6 +54,7 @@ If your app calls `WidgetsFlutterBinding.ensureInitialized()`, place the call to
 | iPhone 15 | 393 × 852 | Dynamic Island, 393 × 852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e, 17 |
 | iPhone 15 Pro Max | 430 × 932 | Dynamic Island, 430 × 932 — covers iPhone 15 Plus, 16 Plus |
 | iPhone 17 | 393 × 852 | Current standard iPhone, 393 × 852 — same geometry as iPhone 15 and 16 |
+| iPhone 17 Air | 420 × 912 | Dynamic Island, 420 × 912 — iPhone 17 Air |
 | iPhone 17 Pro | 402 × 874 | Dynamic Island, 402 × 874 — covers iPhone 16 Pro, 17 Pro |
 | iPhone 17 Pro Max | 440 × 956 | Largest iPhone screen, 440 × 956 |
 
