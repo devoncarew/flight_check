@@ -38,6 +38,7 @@ final List<DeviceProfile> kDeviceProfiles = [
   iphone_15,
   iphone_15_pro_max,
   iphone_17,
+  iphone_17_air,
   iphone_17_pro,
   iphone_17_pro_max,
 
@@ -337,6 +338,39 @@ final iphone_17 = DeviceProfile(
       'Current standard iPhone, 393 × 852 — same geometry as iPhone 15 and 16',
 );
 
+// iPhone 17 Air: 6.6" display, 420×912 logical pixels.
+// Introduced with the iPhone 17 Air (2025). Source: issue #60.
+// Corner border: 6-segment squircle Bézier extracted from the Simulator
+// framebuffer PDF ("iPhone Air", 1260×2736 px physical, 3× scale).
+// The PDF uses a 2× internal coordinate space (2520×5472), so all values are
+// divided by 6 to get logical points.
+//   Top tangent: 420 − 1989.283/6 = 88.45 pt. Side tangent: 88.17 pt.
+// DI cutout: same pill shape as the rest of the Dynamic Island family.
+// Safe area: top 68pt (confirmed via iOS Simulator), bottom 34pt.
+final iphone_17_air = DeviceProfile(
+  id: 'iphone_17_air',
+  name: 'iPhone 17 Air',
+  platform: DevicePlatform.iOS,
+  logicalSize: const Size(420, 912),
+  safeAreaPortrait: const EdgeInsets.only(top: 68, bottom: 34),
+  safeAreaLandscape: const EdgeInsets.only(left: 68, bottom: 20),
+  screenBorder: const SquircleBorder(
+    topTangentLength: 88.45,
+    // Segments relative to top-right corner (420, 0). Each row: cp1x, cp1y,
+    // cp2x, cp2y, x, y.
+    segments: [
+      [-82.87, 0.00, -77.29, 0.02, -71.71, 0.22],
+      [-65.31, 0.46, -58.99, 0.94, -52.68, 2.12],
+      [-39.94, 4.49, -28.36, 9.64, -19.00, 18.98],
+      [-9.65, 28.32, -4.49, 39.90, -2.12, 52.62],
+      [-0.95, 58.92, -0.46, 65.23, -0.22, 71.61],
+      [-0.02, 77.13, 0.00, 82.65, 0.00, 88.17],
+    ],
+  ),
+  cutout: const DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
+  description: 'Dynamic Island, 420 × 912 — iPhone 17 Air',
+);
+
 // iPhone 17 Pro: 6.3" display, 402×874 logical pixels.
 // This geometry was introduced with the iPhone 16 Pro and continues with the
 // iPhone 17 Pro. Source: issue #59.
@@ -350,8 +384,8 @@ final iphone_17_pro = DeviceProfile(
   name: 'iPhone 17 Pro',
   platform: DevicePlatform.iOS,
   logicalSize: const Size(402, 874),
-  safeAreaPortrait: const EdgeInsets.only(top: 59, bottom: 34),
-  safeAreaLandscape: const EdgeInsets.only(left: 59, bottom: 20),
+  safeAreaPortrait: const EdgeInsets.only(top: 62, bottom: 34),
+  safeAreaLandscape: const EdgeInsets.only(left: 62, bottom: 20),
   screenBorder: const SquircleBorder(
     topTangentLength: 84.66,
     // Segments relative to top-right corner (402, 0). Each row: cp1x, cp1y,

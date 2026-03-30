@@ -23,8 +23,16 @@ void main() {
       await tester.pumpWidget(_wrap(DevicePicker(controller: controller)));
       await tester.pumpAndSettle();
 
+      final listFinder = find.byType(Scrollable).first;
       for (final profile in DeviceDatabase.forPlatform(DevicePlatform.iOS)) {
-        if (!profile.tablet) expect(find.text(profile.name), findsOneWidget);
+        if (!profile.tablet) {
+          await tester.scrollUntilVisible(
+            find.text(profile.name),
+            100,
+            scrollable: listFinder,
+          );
+          expect(find.text(profile.name), findsOneWidget);
+        }
       }
     });
 
@@ -36,10 +44,18 @@ void main() {
       await tester.tap(find.text('Android'));
       await tester.pumpAndSettle();
 
+      final listFinder = find.byType(Scrollable).first;
       for (final profile in DeviceDatabase.forPlatform(
         DevicePlatform.android,
       )) {
-        if (!profile.tablet) expect(find.text(profile.name), findsOneWidget);
+        if (!profile.tablet) {
+          await tester.scrollUntilVisible(
+            find.text(profile.name),
+            100,
+            scrollable: listFinder,
+          );
+          expect(find.text(profile.name), findsOneWidget);
+        }
       }
     });
 
