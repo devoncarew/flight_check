@@ -37,23 +37,48 @@ class WindowManagerSizingService implements WindowSizingService {
   ) async {
     await _ready;
 
+    // window_manager.setSize sets the full window height (title bar + content
+    // area). Flutter's content area = windowHeight − titleBarHeight.
+    //
+    // The bottom controls (spacing + toolbar + padding) are a fixed logical
+    // height that must NOT scale with the device — they stay the same size
+    // regardless of how the device is scaled. To keep the DPR formula in
+    // PreviewFlutterView consistent (dpr = physH / (emH + bottomControls)),
+    // the window height must be:
+    //   windowHeight = deviceScale × (emH + bottomControls) + titleBarHeight
+    //
+    // where deviceScale is the fraction of the emulated height that fits on
+    // screen. Using this formula, both axes produce the same effective DPR and
+    // the device fills the content area exactly with no gap.
     final titleBarHeight = await windowManager.getTitleBarHeight();
-    final bottomControlsHeight =
+    const bottomControlsHeight =
         kPreviewSpacing + kToolbarHeight + kPreviewPadding;
-    // The window size includes the title bar; account for it and the bottom
-    // toolbar area.
-    final heightAdjust = titleBarHeight + bottomControlsHeight;
 
     final target = computeTargetSize(profile, orientation);
+    final emulated = profile.logicalSizeForOrientation(orientation);
+    // deviceScale is the fraction applied to the emulated device size.
+    final deviceScale = target.height / emulated.height;
+
     final screen = _screenLogicalSize();
     final maxHeight = screen.height * 0.9;
 
-    var actual = ui.Size(target.width, target.height + heightAdjust);
+    // Window height: scale the chrome alongside the device, then add the fixed
+    // title bar. This ensures the content area height equals
+    // deviceScale × (emH + bottomControls), making the DPR consistent.
+    var actual = ui.Size(
+      target.width,
+      deviceScale * (emulated.height + bottomControlsHeight) + titleBarHeight,
+    );
+
     if (actual.height > maxHeight) {
-      final availableDeviceHeight = maxHeight.truncateToDouble() - heightAdjust;
+      // Re-derive deviceScale from the height budget.
+      final clampedScale =
+          (maxHeight - titleBarHeight) /
+          (emulated.height + bottomControlsHeight);
       actual = ui.Size(
-        target.width * availableDeviceHeight / target.height,
-        availableDeviceHeight + heightAdjust,
+        emulated.width * clampedScale,
+        clampedScale * (emulated.height + bottomControlsHeight) +
+            titleBarHeight,
       );
     }
 

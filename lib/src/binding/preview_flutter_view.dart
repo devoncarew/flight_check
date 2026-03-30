@@ -30,15 +30,17 @@ class PreviewFlutterView implements ui.FlutterView {
   @override
   double get devicePixelRatio {
     final realDpr = _real.devicePixelRatio;
+    final realPhys = _real.physicalSize;
     final available = ui.Size(
-      _real.physicalSize.width,
-      _real.physicalSize.height -
+      realPhys.width,
+      realPhys.height -
           (kPreviewSpacing + kToolbarHeight + kPreviewPadding) * realDpr,
     );
-    return math.min(
+    final dpr = math.min(
       available.width / _controller.emulatedLogicalSize.width,
       available.height / _controller.emulatedLogicalSize.height,
     );
+    return dpr;
   }
 
   /// Reports the emulated device's physical dimensions at the current effective
