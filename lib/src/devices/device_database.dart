@@ -252,7 +252,7 @@ final iphone_14 = DeviceProfile(
 // Corner border: 6-segment squircle Bézier from the Simulator framebuffer PDF
 // (Xcode 16, "iPhone 15", 1179×2556 px, 3× scale).
 //   Top tangent: 393 − 318.35 = 74.65 pt. Side tangent: 73.80 pt.
-//   Same corner shape as iPhone 14 Pro, 15 Pro, 16, 16e, and 17.
+//   Same corner shape as iPhone 14 Pro, 15 Pro, 16, 16e.
 final iphone_15 = DeviceProfile(
   id: 'iphone_15',
   name: 'iPhone 15',
@@ -275,7 +275,7 @@ final iphone_15 = DeviceProfile(
   ),
   cutout: const DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
   description:
-      'Dynamic Island, 393 × 852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e, 17',
+      'Dynamic Island, 393 × 852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e',
 );
 
 // iPhone 15 Pro Max: 6.7" variant; same DI cutout geometry.
@@ -308,34 +308,35 @@ final iphone_15_pro_max = DeviceProfile(
   description: 'Dynamic Island, 430 × 932 — covers iPhone 15 Plus, 16 Plus',
 );
 
-// iPhone 17: 6.1" display, same screen geometry as iPhone 16 and iPhone 15.
-// Apple has held the 393×852 logical size constant from iPhone 14 Pro through
-// iPhone 17; safe-area and DI cutout values are unchanged from iphone_15.
-// Corner border: same Simulator-extracted squircle shape as iphone_15.
-// Listed separately so the current flagship appears in the device picker.
-// Source: iosresolution.com, useyourloaf.com
+// iPhone 17: 6.1" display, 402×874 logical pixels.
+// Apple changed the standard iPhone screen size with the iPhone 17; it now
+// shares the same 402×874 geometry as the iPhone 17 Pro (Simulator-confirmed).
+// Corner border: Simulator framebuffer PDF ("iPhone 17", 1206×2622 px, 3× scale)
+// — identical PDF to "iPhone 17 Pro".
+//   Top tangent: 402 − 317.34 = 84.66 pt. Side tangent: 84.50 pt.
+// Listed separately so the current standard flagship appears in the picker.
 final iphone_17 = DeviceProfile(
   id: 'iphone_17',
   name: 'iPhone 17',
   platform: DevicePlatform.iOS,
-  logicalSize: const Size(393, 852),
-  safeAreaPortrait: const EdgeInsets.only(top: 59, bottom: 34),
-  safeAreaLandscape: const EdgeInsets.only(left: 59, bottom: 20),
+  logicalSize: const Size(402, 874),
+  safeAreaPortrait: const EdgeInsets.only(top: 62, bottom: 34),
+  safeAreaLandscape: const EdgeInsets.only(left: 62, bottom: 20),
   screenBorder: const SquircleBorder(
-    topTangentLength: 74.65,
-    // Same corner shape as iphone_15 (393 pt wide, same Simulator PDF).
+    topTangentLength: 84.66,
+    // Segments relative to top-right corner (402, 0). Identical to iphone_17_pro.
     segments: [
-      [-70.06, 0.00, -65.48, 0.02, -60.89, 0.19],
-      [-55.47, 0.39, -50.10, 0.80, -44.74, 1.80],
-      [-33.93, 3.82, -24.09, 8.19, -16.14, 16.14],
-      [-8.19, 24.09, -3.82, 33.92, -1.80, 44.74],
-      [-0.80, 50.10, -0.39, 55.47, -0.19, 60.90],
-      [-0.03, 65.20, 0.00, 69.50, 0.00, 73.80],
+      [-79.32, 0.00, -73.98, 0.02, -68.63, 0.21],
+      [-62.51, 0.44, -56.46, 0.90, -50.42, 2.03],
+      [-38.23, 4.30, -27.14, 9.23, -18.19, 18.19],
+      [-9.23, 27.14, -4.30, 38.23, -2.03, 50.43],
+      [-0.90, 56.46, -0.44, 62.51, -0.21, 68.62],
+      [-0.02, 73.92, 0.00, 79.21, 0.00, 84.50],
     ],
   ),
   cutout: const DynamicIslandCutout(size: Size(126, 37), topOffset: 11),
   description:
-      'Current standard iPhone, 393 × 852 — same geometry as iPhone 15 and 16',
+      'Current standard iPhone, 402 × 874 — same geometry as iPhone 17 Pro',
 );
 
 // iPhone 17 Air: 6.6" display, 420×912 logical pixels.
