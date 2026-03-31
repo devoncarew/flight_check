@@ -8,6 +8,7 @@ import '../frame/screen_clip_widget.dart';
 import '../preview_controller.dart';
 import '../theme.dart';
 import 'common.dart';
+import 'control_badge.dart';
 import 'device_picker.dart';
 import 'preview_shortcuts.dart';
 import 'preview_toolbar.dart';
@@ -40,22 +41,34 @@ class PreviewOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: controller,
-      builder: (context, _) {
-        if (controller.passthroughMode) {
-          return child;
-        }
+    // Directionality + Theme are provided here because the overlay sits above
+    // the user's MaterialApp and has no such ancestors. They wrap everything,
+    // including the badge, so it renders correctly in passthrough mode too.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Theme(
+        data: ThemeData(brightness: Brightness.dark),
+        child: PreviewShortcuts(
+          controller: controller,
+          child: ListenableBuilder(
+            listenable: controller,
+            builder: (context, _) {
+              if (controller.passthroughMode) {
+                // In passthrough mode render the app at its natural size with
+                // the badge overlaid so the user can return to preview mode.
+                return Stack(
+                  children: [
+                    child,
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: ControlBadge(controller: controller),
+                    ),
+                  ],
+                );
+              }
 
-        // Directionality + Theme are provided here because the overlay
-        // sits above the user's MaterialApp and has no such ancestors.
-        return Directionality(
-          textDirection: TextDirection.ltr,
-          child: Theme(
-            data: ThemeData(brightness: Brightness.dark),
-            child: PreviewShortcuts(
-              controller: controller,
-              child: ColoredBox(
+              return ColoredBox(
                 color: kPreviewBackground,
                 child: Stack(
                   children: [
@@ -115,13 +128,20 @@ class PreviewOverlay extends StatelessWidget {
                     Positioned.fill(
                       child: DevicePicker(controller: controller),
                     ),
+
+                    // Control badge — anchored to top-right corner.
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: ControlBadge(controller: controller),
+                    ),
                   ],
                 ),
-              ),
-            ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

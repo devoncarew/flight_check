@@ -5,6 +5,7 @@ import 'package:flight_check/src/devices/device_database.dart';
 import 'package:flight_check/src/devices/device_profile.dart';
 import 'package:flight_check/src/frame/screen_clip_widget.dart';
 import 'package:flight_check/src/preview_controller.dart';
+import 'package:flight_check/src/ui/control_badge.dart';
 import 'package:flight_check/src/ui/device_picker.dart';
 import 'package:flight_check/src/ui/preview_overlay.dart';
 import 'package:flight_check/src/ui/preview_toolbar.dart';
@@ -96,6 +97,37 @@ void main() {
           .widget<ScreenClipWidget>(find.byType(ScreenClipWidget))
           .orientation;
       expect(after, DeviceOrientation.landscape);
+    });
+
+    testWidgets('shows ControlBadge with device name', (tester) async {
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: PreviewOverlay(
+            controller: controller,
+            child: const SizedBox.expand(),
+          ),
+        ),
+      );
+
+      expect(find.byType(ControlBadge), findsOneWidget);
+      expect(find.text(controller.activeProfile.name), findsWidgets);
+    });
+
+    testWidgets('ControlBadge visible in passthrough mode', (tester) async {
+      controller.togglePassthrough();
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: PreviewOverlay(
+            controller: controller,
+            child: const SizedBox.expand(),
+          ),
+        ),
+      );
+
+      expect(find.byType(ControlBadge), findsOneWidget);
     });
 
     testWidgets('shows PreviewToolbar by default', (tester) async {
