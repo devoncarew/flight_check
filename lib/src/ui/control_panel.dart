@@ -48,7 +48,6 @@ class _ControlPanelState extends State<ControlPanel>
   late final TabController _tabController;
   late final AnimationController _animController;
   late final Animation<double> _slideAnim;
-  late final Animation<double> _fadeAnim;
 
   bool _shortcutsExpanded = false;
 
@@ -77,12 +76,6 @@ class _ControlPanelState extends State<ControlPanel>
       parent: _animController,
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeInCubic,
-    );
-
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-      reverseCurve: Curves.easeIn,
     );
 
     if (widget.controller.devicePickerVisible) {
@@ -124,23 +117,20 @@ class _ControlPanelState extends State<ControlPanel>
             ),
           ),
 
-          // Panel card anchored below the badge.
+          // Panel card anchored below the badge, slides in from the right.
           Positioned(
             top: kControlBadgeHeight,
             right: 0,
-            child: FadeTransition(
-              opacity: _fadeAnim,
-              child: AnimatedBuilder(
-                animation: _slideAnim,
-                builder: (context, child) => ClipRect(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    heightFactor: _slideAnim.value,
-                    child: child,
-                  ),
+            child: AnimatedBuilder(
+              animation: _slideAnim,
+              builder: (context, child) => ClipRect(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  widthFactor: _slideAnim.value,
+                  child: child,
                 ),
-                child: _buildCard(),
               ),
+              child: _buildCard(),
             ),
           ),
         ],
