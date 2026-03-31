@@ -20,8 +20,11 @@ const TextStyle kPreviewMonospaceStyle = TextStyle(
   fontFamilyFallback: ['Menlo', 'Consolas', 'Courier New'],
 );
 
+/// The margin to use around controller UIs.
+const double kControlMargin = 6;
+
 /// Height of the [ControlBadge] widget (logical pixels).
 ///
 /// Used to position the [ControlPanel] immediately below the badge so they
 /// read as one connected surface.
-const double kControlBadgeHeight = 29 + 4;
+const double kControlBadgeHeight = 28 + kControlMargin;

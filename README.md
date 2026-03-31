@@ -19,7 +19,7 @@ Add `flight_check` as a regular dependency:
 flutter pub add flight_check
 ```
 
-In your `main.dart`, call `FlightCheck.configure()` (**before** `runApp`):
+In your `main.dart`, call `FlightCheck.configure()` (__before__ `runApp`):
 
 ```dart
 import 'package:flight_check/flight_check.dart';
@@ -33,8 +33,8 @@ void main() {
 
 Then run your app as Flutter Desktop app on macOS, Linux, or Windows; the
 preview UI appears automatically. You can even leave the call in
-unconditionally; Flight Check is tree-shaken out at compile time for release
-builds.
+unconditionally; when doing a release build Flight Check is tree-shaken out at
+compile time.
 
 - **Release / profile builds** — tree-shaken out at compile time
 - **iOS / Android devices** — skipped at runtime so real-device debug sessions

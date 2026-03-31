@@ -93,7 +93,7 @@ class _ControlBadgeState extends State<ControlBadge>
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.35),
                       blurRadius: 8,
-                      offset: const Offset(-2, 3),
+                      offset: const Offset(2, 3),
                     ),
                   ],
                 ),
