@@ -48,7 +48,8 @@ final List<DeviceProfile> kDeviceProfiles = [
   pixel_10_pro,
   samsung_galaxy_a15,
   samsung_galaxy_a55,
-  samsung_galaxy_s24,
+  samsung_galaxy_s25,
+  samsung_galaxy_s26,
 
   // Tablets
   ipad_mini_a17,
@@ -442,21 +443,46 @@ final samsung_galaxy_a55 = DeviceProfile(
   description: 'Mid-range Samsung A-series, ~384 × 854 — covers A54, A55',
 );
 
-// Samsung Galaxy S24: Samsung does not publish device-tree cutout geometry.
-// Corner radius: 94px / 3.0 DPR = 31.3 ≈ 31dp.
-// Punch hole: centered, horizontally.
-//   Camera radius 27px → diameter 54px / 3.0 = 18dp.
-//   Camera center Y 54px / 3.0 = 18dp from screen top.
-final samsung_galaxy_s24 = DeviceProfile(
-  id: 'samsung_galaxy_s24',
-  name: 'Samsung Galaxy S24',
+// Samsung Galaxy S26: Samsung does not publish device-tree cutout geometry.
+// Physical: 1080 × 2340 px. DPR: 3.0. Logical size: 360 × 780 dp.
+// Geometry sourced from Galaxy S26 emulator skin; S24 shares the same values
+// (S25 was a one-generation departure with a slightly larger corner radius):
+//   Corner radius: 94px / 3.0 = 31.3 ≈ 31dp.
+//   Punch hole: centered horizontally, center at (540, 54)px.
+//     Camera radius 24px → diameter 48px / 3.0 = 16dp.
+//     Camera center Y: 54px / 3.0 = 18dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_s26 = DeviceProfile(
+  id: 'samsung_galaxy_s26',
+  name: 'Samsung Galaxy S26',
   platform: DevicePlatform.android,
   logicalSize: const Size(360, 780),
   safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
   safeAreaLandscape: const EdgeInsets.only(bottom: 24),
   screenBorder: const CircularBorder(31),
-  cutout: const PunchHoleCutout(diameter: 18, topOffset: 18),
-  description: 'Flagship Samsung, 360 × 780 — covers S23, S24',
+  cutout: const PunchHoleCutout(diameter: 16, topOffset: 18),
+  description: 'Flagship Samsung, 360 × 780 — covers S24, S26',
+);
+
+// Samsung Galaxy S25: one-generation departure from the S24/S26 geometry.
+// Physical: 1080 × 2340 px. DPR: 3.0. Logical size: 360 × 780 dp.
+// Geometry sourced from Galaxy S25 emulator skin:
+//   Corner radius: 101px / 3.0 = 33.7 ≈ 34dp.
+//   Punch hole: centered horizontally, center at (540, 57)px.
+//     Camera radius 24px → diameter 48px / 3.0 = 16dp.
+//     Camera center Y: 57px / 3.0 = 19dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_s25 = DeviceProfile(
+  id: 'samsung_galaxy_s25',
+  name: 'Samsung Galaxy S25',
+  platform: DevicePlatform.android,
+  logicalSize: const Size(360, 780),
+  safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
+  safeAreaLandscape: const EdgeInsets.only(bottom: 24),
+  screenBorder: const CircularBorder(34),
+  cutout: const PunchHoleCutout(diameter: 16, topOffset: 19),
+  description:
+      'Flagship Samsung S25, 360 × 780 — slightly rounder corners than S24/S26',
 );
 
 // ── Tablets ──────────────────────────────────────────────────────────────
