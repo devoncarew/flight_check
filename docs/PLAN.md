@@ -309,7 +309,7 @@ Delete `MacosPreviewMenu` and its file (`lib/src/ui/macos_menu.dart`). Remove
 the `MacosPreviewMenu` wrapper from `PreviewOverlay.build`. The native menu bar
 is not discoverable and will be replaced by in-app controls.
 
-### Step 6.2 — Control badge widget
+### Step 6.2 — Control badge widget [done]
 
 Create `lib/src/ui/control_badge.dart` — a small semi-transparent widget
 anchored to the top-right corner of the window.
