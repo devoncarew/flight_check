@@ -9,7 +9,7 @@ import '../preview_controller.dart';
 import '../theme.dart';
 import 'common.dart';
 import 'control_badge.dart';
-import 'device_picker.dart';
+import 'control_panel.dart';
 import 'preview_shortcuts.dart';
 import 'preview_toolbar.dart';
 
@@ -44,102 +44,116 @@ class PreviewOverlay extends StatelessWidget {
     // Directionality + Theme are provided here because the overlay sits above
     // the user's MaterialApp and has no such ancestors. They wrap everything,
     // including the badge, so it renders correctly in passthrough mode too.
+    //
+    // Overlay is required by Tooltip (used in ControlPanel's IconButtons).
+    // PreviewOverlay sits above the user's MaterialApp so no Overlay ancestor
+    // exists; we provide one explicitly here.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Theme(
         data: ThemeData(brightness: Brightness.dark),
-        child: PreviewShortcuts(
-          controller: controller,
-          child: ListenableBuilder(
-            listenable: controller,
-            builder: (context, _) {
-              if (controller.passthroughMode) {
-                // In passthrough mode render the app at its natural size with
-                // the badge overlaid so the user can return to preview mode.
-                return Stack(
-                  children: [
-                    child,
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: ControlBadge(controller: controller),
-                    ),
-                  ],
-                );
-              }
+        child: Overlay(
+          initialEntries: [
+            OverlayEntry(
+              builder: (context) => PreviewShortcuts(
+                controller: controller,
+                child: ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, _) {
+                    if (controller.passthroughMode) {
+                      // In passthrough mode render the app at its natural
+                      // size with the badge overlaid so the user can
+                      // return to preview mode.
+                      return Stack(
+                        children: [
+                          child,
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: ControlBadge(controller: controller),
+                          ),
+                        ],
+                      );
+                    }
 
-              return ColoredBox(
-                color: kPreviewBackground,
-                child: Stack(
-                  children: [
-                    // Main column: padding → device area → padding →
-                    // toolbar → padding.
-                    Column(
-                      children: [
-                        Expanded(
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              final emulated = controller.emulatedLogicalSize;
-                              final scale = computeScale(
-                                constraints.biggest,
-                                emulated,
-                              );
-                              return Center(
-                                child: RaisedSurface(
-                                  borderRadius: BorderRadius.circular(
-                                    _cornerRadiusValue(
-                                      controller.activeProfile.screenBorder,
-                                    ),
-                                  ),
-                                  height: 6,
-                                  child: SizedBox(
-                                    width: emulated.width * scale,
-                                    height: emulated.height * scale,
-                                    child: ScreenClipWidget(
-                                      profile: controller.activeProfile,
-                                      orientation: controller.orientation,
-                                      child: child,
-                                    ),
-                                  ),
+                    return ColoredBox(
+                      color: kPreviewBackground,
+                      child: Stack(
+                        children: [
+                          // Main column: padding → device area → padding →
+                          // toolbar → padding.
+                          Column(
+                            children: [
+                              Expanded(
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    final emulated =
+                                        controller.emulatedLogicalSize;
+                                    final scale = computeScale(
+                                      constraints.biggest,
+                                      emulated,
+                                    );
+                                    return Center(
+                                      child: RaisedSurface(
+                                        borderRadius: BorderRadius.circular(
+                                          _cornerRadiusValue(
+                                            controller
+                                                .activeProfile
+                                                .screenBorder,
+                                          ),
+                                        ),
+                                        height: 6,
+                                        child: SizedBox(
+                                          width: emulated.width * scale,
+                                          height: emulated.height * scale,
+                                          child: ScreenClipWidget(
+                                            profile: controller.activeProfile,
+                                            orientation: controller.orientation,
+                                            child: child,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+
+                              const SizedBox(height: kPreviewSpacing),
+
+                              SizedBox(
+                                height: kToolbarHeight,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: PreviewToolbar(controller: controller),
+                                ),
+                              ),
+
+                              const SizedBox(height: kPreviewPadding),
+                            ],
                           ),
-                        ),
 
-                        const SizedBox(height: kPreviewSpacing),
-
-                        SizedBox(
-                          height: kToolbarHeight,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: PreviewToolbar(controller: controller),
+                          // Control panel — always mounted so it can
+                          // animate in and out. Anchored to the top-right
+                          // corner (below the badge) with its own
+                          // full-window backdrop.
+                          Positioned.fill(
+                            child: ControlPanel(controller: controller),
                           ),
-                        ),
 
-                        const SizedBox(height: kPreviewPadding),
-                      ],
-                    ),
-
-                    // Backdrop + picker — always mounted so the picker
-                    // can animate in and out. The backdrop covers the full
-                    // window (including toolbar) so all taps outside the
-                    // card dismiss the picker.
-                    Positioned.fill(
-                      child: DevicePicker(controller: controller),
-                    ),
-
-                    // Control badge — anchored to top-right corner.
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: ControlBadge(controller: controller),
-                    ),
-                  ],
+                          // Control badge — anchored to top-right corner.
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: ControlBadge(controller: controller),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
