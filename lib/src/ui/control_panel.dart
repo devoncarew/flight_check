@@ -10,9 +10,6 @@ import '../theme.dart';
 /// Width of the control panel card.
 const double _kPanelWidth = 290;
 
-/// Height reserved for the tabbed device list inside the panel.
-const double _kDeviceListHeight = 420;
-
 /// Corner radius used for all non-flush panel corners.
 const double _kPanelRadius = 10;
 
@@ -128,7 +125,11 @@ class _ControlPanelState extends State<ControlPanel>
                   begin: const Offset(1, 0),
                   end: Offset.zero,
                 ).animate(_slideAnim),
-                child: _buildCard(),
+                child: _buildCard(
+                  maxHeight:
+                      MediaQuery.sizeOf(context).height * 2 / 3 -
+                      kControlBadgeHeight,
+                ),
               ),
             ),
           ),
@@ -137,7 +138,7 @@ class _ControlPanelState extends State<ControlPanel>
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildCard({required double maxHeight}) {
     final iOS = DeviceDatabase.all
         .where((d) => d.platform == DevicePlatform.iOS && !d.tablet)
         .toList();
@@ -182,43 +183,45 @@ class _ControlPanelState extends State<ControlPanel>
                   thickness: 1,
                   color: kPreviewForeground,
                 ),
-                SizedBox(
-                  height: _kDeviceListHeight,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        controller: _tabController,
-                        tabs: const [
-                          Tab(text: 'iOS'),
-                          Tab(text: 'Android'),
-                          Tab(text: 'Tablets'),
-                        ],
-                        labelColor: kPreviewForegroundEmphasis,
-                        indicatorColor: kPreviewForegroundEmphasis,
-                        unselectedLabelColor: kPreviewForeground,
-                        dividerColor: const Color(0x22FFFFFF),
-                        tabAlignment: TabAlignment.fill,
-                      ),
-                      Expanded(
-                        child: TabBarView(
+                Flexible(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: maxHeight),
+                    child: Column(
+                      children: [
+                        TabBar(
                           controller: _tabController,
-                          children: [
-                            _DeviceList(
-                              profiles: iOS,
-                              controller: widget.controller,
-                            ),
-                            _DeviceList(
-                              profiles: android,
-                              controller: widget.controller,
-                            ),
-                            _DeviceList(
-                              profiles: tablets,
-                              controller: widget.controller,
-                            ),
+                          tabs: const [
+                            Tab(text: 'iOS'),
+                            Tab(text: 'Android'),
+                            Tab(text: 'Tablets'),
                           ],
+                          labelColor: kPreviewForegroundEmphasis,
+                          indicatorColor: kPreviewForegroundEmphasis,
+                          unselectedLabelColor: kPreviewForeground,
+                          dividerColor: const Color(0x22FFFFFF),
+                          tabAlignment: TabAlignment.fill,
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _DeviceList(
+                                profiles: iOS,
+                                controller: widget.controller,
+                              ),
+                              _DeviceList(
+                                profiles: android,
+                                controller: widget.controller,
+                              ),
+                              _DeviceList(
+                                profiles: tablets,
+                                controller: widget.controller,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -258,6 +261,15 @@ class _ActionRow extends StatelessWidget {
                   : kPreviewForeground,
               iconSize: 16,
               onPressed: onToggleShortcuts,
+            ),
+            const Spacer(),
+            const Text(
+              'Flight Check',
+              style: TextStyle(
+                color: Color(0x99FFFFFF),
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+              ),
             ),
             const Spacer(),
             // IconButton(
