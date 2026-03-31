@@ -8,7 +8,7 @@ import '../preview_controller.dart';
 import '../theme.dart';
 
 /// Width of the control panel card.
-const double _kPanelWidth = 290;
+const double _kPanelWidth = 310;
 
 /// Corner radius used for all non-flush panel corners.
 const double _kPanelRadius = 10;
@@ -406,67 +406,56 @@ class _DeviceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = profile.logicalSize;
-    final w = size.width.truncate().toString();
-    final h = size.height.truncate().toString();
+    final w = size.width.truncate();
+    final h = size.height.truncate();
+
+    const activeBg = Color(0x22FFFFFF);
+    const borderColor = Color(0x18FFFFFF);
 
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isActive ? activeBg : null,
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          profile.name,
-                          style: const TextStyle(
-                            color: kPreviewForegroundEmphasis,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '$w×$h',
-                        style: const TextStyle(
-                          color: kPreviewForeground,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (profile.description != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      profile.description!,
-                      style: const TextStyle(
-                        color: kPreviewForeground,
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+            Row(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    profile.name,
+                    style: const TextStyle(
+                      color: kPreviewForegroundEmphasis,
+                      // fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ],
-              ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '$w×$h',
+                  style: const TextStyle(
+                    color: kPreviewForeground,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-            if (isActive) ...[
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.check,
-                color: kPreviewForegroundEmphasis,
-                size: 16,
+            if (profile.description != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                profile.description!,
+                style: const TextStyle(color: kPreviewForeground),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ],
           ],
