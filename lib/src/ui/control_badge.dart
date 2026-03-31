@@ -12,66 +12,123 @@ import '../theme.dart';
 ///
 /// Stays visible in passthrough mode (dimmed) so users can always return to
 /// the preview without needing a keyboard shortcut.
-class ControlBadge extends StatelessWidget {
+///
+/// Animates between open and closed states — the background brightens and the
+/// chevron rotates 180° when the panel is open.
+class ControlBadge extends StatefulWidget {
   const ControlBadge({super.key, required this.controller});
 
   final PreviewController controller;
 
   @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: controller,
-      builder: (context, _) => _build(context),
-    );
+  State<ControlBadge> createState() => _ControlBadgeState();
+}
+
+class _ControlBadgeState extends State<ControlBadge>
+    with SingleTickerProviderStateMixin {
+  // Matches ControlPanel slide animation duration.
+  static const _kDuration = Duration(milliseconds: 200);
+
+  late final AnimationController _anim;
+  late final Animation<double> _chevron;
+  late final Animation<double> _bgAlpha;
+
+  @override
+  void initState() {
+    super.initState();
+    _anim = AnimationController(duration: _kDuration, vsync: this);
+    if (widget.controller.devicePickerVisible) _anim.value = 1.0;
+
+    _chevron = CurvedAnimation(parent: _anim, curve: Curves.easeInOut);
+    _bgAlpha = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _anim, curve: Curves.easeInOut));
+
+    widget.controller.addListener(_onControllerChanged);
   }
 
-  Widget _build(BuildContext context) {
-    final dimmed = controller.passthroughMode;
+  void _onControllerChanged() {
+    if (widget.controller.devicePickerVisible) {
+      _anim.forward();
+    } else {
+      _anim.reverse();
+    }
+  }
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: controller.toggleDevicePicker,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-          ),
-          child: ColoredBox(
-            color: kPreviewBackground.withValues(alpha: dimmed ? 0.4 : 0.8),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
-                top: 4,
-                bottom: 5,
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onControllerChanged);
+    _anim.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        final dimmed = widget.controller.passthroughMode;
+        final foregroundAlpha = dimmed ? 0.5 : 1.0;
+
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: widget.controller.toggleDevicePicker,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    controller.activeProfile.icon,
-                    size: 12,
-                    color: kPreviewForeground.withValues(
-                      alpha: dimmed ? 0.5 : 1.0,
+              child: AnimatedBuilder(
+                animation: _anim,
+                builder: (context, _) => ColoredBox(
+                  color: kPreviewBackground.withValues(
+                    alpha: dimmed ? 0.4 : _bgAlpha.value,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 6,
+                      top: 4,
+                      bottom: 6,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.controller.activeProfile.name,
+                          style: TextStyle(
+                            color: kPreviewForeground.withValues(
+                              alpha: foregroundAlpha,
+                            ),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        RotationTransition(
+                          turns: Tween<double>(
+                            begin: 0.0,
+                            end: 0.5,
+                          ).animate(_chevron),
+                          child: Icon(
+                            Icons.expand_more,
+                            size: 14,
+                            color: kPreviewForeground.withValues(
+                              alpha: foregroundAlpha,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    controller.activeProfile.name,
-                    style: TextStyle(
-                      color: kPreviewForeground.withValues(
-                        alpha: dimmed ? 0.5 : 1.0,
-                      ),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

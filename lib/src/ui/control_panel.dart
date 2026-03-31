@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -8,10 +9,10 @@ import '../preview_controller.dart';
 import '../theme.dart';
 
 /// Width of the control panel card.
-const double _kPanelWidth = 290;
+const double _kPanelWidth = 332;
 
-/// Height reserved for the tabbed device list inside the panel.
-const double _kDeviceListHeight = 420;
+/// Width of the control panel card.
+const double _kPanelHeight = 565;
 
 /// Corner radius used for all non-flush panel corners.
 const double _kPanelRadius = 10;
@@ -44,28 +45,22 @@ class ControlPanel extends StatefulWidget {
 }
 
 class _ControlPanelState extends State<ControlPanel>
-    with TickerProviderStateMixin {
-  late final TabController _tabController;
+    with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
   late final Animation<double> _slideAnim;
 
-  bool _shortcutsExpanded = false;
+  late int _selectedTab;
 
   @override
   void initState() {
     super.initState();
 
     final profile = widget.controller.activeProfile;
-    final initialIndex = profile.tablet
+    _selectedTab = profile.tablet
         ? 2
         : profile.platform == DevicePlatform.android
         ? 1
         : 0;
-    _tabController = TabController(
-      length: 3,
-      vsync: this,
-      initialIndex: initialIndex,
-    );
 
     _animController = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -96,13 +91,15 @@ class _ControlPanelState extends State<ControlPanel>
   @override
   void dispose() {
     widget.controller.removeListener(_onControllerChanged);
-    _tabController.dispose();
     _animController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxHeight =
+        MediaQuery.sizeOf(context).height - kControlBadgeHeight * 2 - 16;
+
     return AnimatedBuilder(
       animation: _animController,
       builder: (context, child) =>
@@ -128,7 +125,10 @@ class _ControlPanelState extends State<ControlPanel>
                   begin: const Offset(1, 0),
                   end: Offset.zero,
                 ).animate(_slideAnim),
-                child: _buildCard(),
+                child: SizedBox(
+                  height: math.min(maxHeight, _kPanelHeight),
+                  child: _buildContents(context),
+                ),
               ),
             ),
           ),
@@ -137,7 +137,7 @@ class _ControlPanelState extends State<ControlPanel>
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildContents(BuildContext context) {
     final iOS = DeviceDatabase.all
         .where((d) => d.platform == DevicePlatform.iOS && !d.tablet)
         .toList();
@@ -146,86 +146,139 @@ class _ControlPanelState extends State<ControlPanel>
         .toList();
     final tablets = DeviceDatabase.all.where((d) => d.tablet).toList();
 
+    // SegmentedButton requires MaterialLocalizations; provide them here so the
+    // panel works even when no MaterialApp ancestor exists.
     return SizedBox(
       width: _kPanelWidth,
-      child: Material(
-        color: kPreviewBackground,
-        borderRadius: _kPanelBorderRadius,
-        child: ClipRRect(
+      child: Localizations(
+        locale: const Locale('en'),
+        delegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        child: Material(
+          color: kPreviewBackground,
           borderRadius: _kPanelBorderRadius,
-          // TabBar requires MaterialLocalizations; provide them here so the
-          // panel works even when no MaterialApp ancestor exists.
-          child: Localizations(
-            locale: const Locale('en'),
-            delegates: const [
-              DefaultMaterialLocalizations.delegate,
-              DefaultWidgetsLocalizations.delegate,
-            ],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _ActionRow(
-                  controller: widget.controller,
-                  shortcutsExpanded: _shortcutsExpanded,
-                  onToggleShortcuts: () =>
-                      setState(() => _shortcutsExpanded = !_shortcutsExpanded),
-                ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeInOut,
-                  child: _shortcutsExpanded
-                      ? const _ShortcutsSection()
-                      : const SizedBox.shrink(),
-                ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: kPreviewForeground,
-                ),
-                SizedBox(
-                  height: _kDeviceListHeight,
-                  child: Column(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              _ActionRow(controller: widget.controller),
+              const Divider(height: 1, thickness: 1, color: Color(0x33FFFFFF)),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _createSegmentedButton(),
+              ),
+              const SizedBox(height: 4),
+              const Divider(height: 1, thickness: 1, color: Color(0x33FFFFFF)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: IndexedStack(
+                    index: _selectedTab,
+                    alignment: AlignmentDirectional.topStart,
                     children: [
-                      TabBar(
-                        controller: _tabController,
-                        tabs: const [
-                          Tab(text: 'iOS'),
-                          Tab(text: 'Android'),
-                          Tab(text: 'Tablets'),
-                        ],
-                        labelColor: kPreviewForegroundEmphasis,
-                        indicatorColor: kPreviewForegroundEmphasis,
-                        unselectedLabelColor: kPreviewForeground,
-                        dividerColor: const Color(0x22FFFFFF),
-                        tabAlignment: TabAlignment.fill,
+                      _DeviceList(profiles: iOS, controller: widget.controller),
+                      _DeviceList(
+                        profiles: android,
+                        controller: widget.controller,
                       ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            _DeviceList(
-                              profiles: iOS,
-                              controller: widget.controller,
-                            ),
-                            _DeviceList(
-                              profiles: android,
-                              controller: widget.controller,
-                            ),
-                            _DeviceList(
-                              profiles: tablets,
-                              controller: widget.controller,
-                            ),
-                          ],
-                        ),
+                      _DeviceList(
+                        profiles: tablets,
+                        controller: widget.controller,
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              const Divider(height: 1, thickness: 1, color: Color(0x33FFFFFF)),
+              // Footer area.
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  bottom: 12,
+                  left: 8,
+                  right: 8,
+                ),
+                child: Row(
+                  children: [
+                    _ShortcutButton(
+                      icon: Icons.devices,
+                      binding: '${Platform.isMacOS ? '⌘' : '^'}D',
+                      tooltip: 'Toggle device picker',
+                      onTap: widget.controller.toggleDevicePicker,
+                    ),
+                    const Expanded(child: SizedBox(width: 16)),
+                    _ShortcutButton(
+                      icon: Icons.skip_previous,
+                      binding: '${Platform.isMacOS ? '⌘' : '^'}[',
+                      tooltip: 'Previous device',
+                      onTap: () => widget.controller.cycleDevice(-1),
+                    ),
+                    const SizedBox(width: 8),
+                    _ShortcutButton(
+                      icon: Icons.skip_next,
+                      binding: '${Platform.isMacOS ? '⌘' : '^'}]',
+                      tooltip: 'Next device',
+                      onTap: () => widget.controller.cycleDevice(1),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  SegmentedButton<int> _createSegmentedButton() {
+    return SegmentedButton<int>(
+      expandedInsets: EdgeInsets.zero,
+      segments: const [
+        ButtonSegment(
+          value: 0,
+          label: Text('iOS'),
+          icon: Icon(Icons.phone_iphone),
+        ),
+        ButtonSegment(
+          value: 1,
+          label: Text('Android'),
+          icon: Icon(Icons.phone_android),
+        ),
+        ButtonSegment(
+          value: 2,
+          label: Text('Tablets'),
+          icon: Icon(Icons.tablet),
+        ),
+      ],
+      selected: {_selectedTab},
+      onSelectionChanged: (s) => setState(() => _selectedTab = s.first),
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? kPreviewForegroundEmphasis
+              : kPreviewForeground,
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? const Color(0x33FFFFFF)
+              : Colors.transparent,
+        ),
+        side: WidgetStatePropertyAll(
+          BorderSide(color: kPreviewForeground.withValues(alpha: 0.3)),
+        ),
+        textStyle: const WidgetStatePropertyAll(TextStyle(fontSize: 12)),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6)),
+          ),
+        ),
+      ),
+      showSelectedIcon: false,
     );
   }
 }
@@ -233,118 +286,41 @@ class _ControlPanelState extends State<ControlPanel>
 // ── Action icon row ───────────────────────────────────────────────────────────
 
 class _ActionRow extends StatelessWidget {
-  const _ActionRow({
-    required this.controller,
-    required this.shortcutsExpanded,
-    required this.onToggleShortcuts,
-  });
+  const _ActionRow({required this.controller});
 
   final PreviewController controller;
-  final bool shortcutsExpanded;
-  final VoidCallback onToggleShortcuts;
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: controller,
-      builder: (context, _) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.keyboard_outlined),
-              color: shortcutsExpanded
-                  ? kPreviewForegroundEmphasis
-                  : kPreviewForeground,
-              iconSize: 16,
-              onPressed: onToggleShortcuts,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Text(
+              'Flight Check',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: kPreviewForegroundEmphasis),
             ),
-            const Spacer(),
-            // IconButton(
-            //   icon: Icon(
-            //     controller.passthroughMode
-            //         ? Icons.visibility_off_outlined
-            //         : Icons.visibility_outlined,
-            //   ),
-            //   color: controller.passthroughMode
-            //       ? kPreviewForegroundEmphasis
-            //       : kPreviewForeground,
-            //   iconSize: 16,
-            //   onPressed: controller.togglePassthrough,
-            // ),
-            IconButton(
-              icon: const Icon(Icons.screen_rotation),
-              color: kPreviewForeground,
-              iconSize: 16,
-              onPressed: controller.toggleOrientation,
-            ),
-          ],
-        ),
+          ),
+          _ShortcutButton(
+            icon: Icons.screen_rotation,
+            binding: '${Platform.isMacOS ? '⌘' : '^'}L',
+            tooltip: 'Toggle orientation',
+            onTap: controller.toggleOrientation,
+          ),
+        ],
       ),
     );
   }
 }
 
-// ── Keyboard shortcuts reference ──────────────────────────────────────────────
-
-class _ShortcutsSection extends StatelessWidget {
-  const _ShortcutsSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final modifier = Platform.isMacOS ? '⌘' : 'Ctrl-';
-    final shortcuts = [
-      ('Toggle device picker', '${modifier}D'),
-      ('Toggle orientation', '${modifier}L'),
-      ('Next device', '$modifier]'),
-      ('Previous device', '$modifier['),
-    ];
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Divider(height: 1, thickness: 1, color: Color(0x33FFFFFF)),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final (label, key) in shortcuts)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          label,
-                          style: const TextStyle(
-                            color: kPreviewForeground,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        key,
-                        style: const TextStyle(
-                          color: kPreviewForeground,
-                          fontSize: 12,
-                          fontFamilyFallback: [
-                            'Menlo',
-                            'Consolas',
-                            'Courier New',
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+TextStyle _monospace() {
+  return const TextStyle(
+    color: kPreviewForeground,
+    fontSize: 12,
+    fontFamilyFallback: ['Menlo', 'Consolas', 'Courier New'],
+  );
 }
 
 // ── Device list (one per tab) ─────────────────────────────────────────────────
@@ -361,7 +337,7 @@ class _DeviceList extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         return ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.zero,
           children: [
             for (final profile in profiles)
               _DeviceItem(
@@ -394,72 +370,105 @@ class _DeviceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = profile.logicalSize;
-    final w = size.width.truncate().toString();
-    final h = size.height.truncate().toString();
+    final w = size.width.truncate();
+    final h = size.height.truncate();
+
+    const activeBg = Color(0x22FFFFFF);
+    const borderColor = Color(0x18FFFFFF);
 
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isActive ? activeBg : null,
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          profile.name,
-                          style: const TextStyle(
-                            color: kPreviewForegroundEmphasis,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '$w×$h',
-                        style: const TextStyle(
-                          color: kPreviewForeground,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (profile.description != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      profile.description!,
-                      style: const TextStyle(
-                        color: kPreviewForeground,
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+            Row(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    profile.name,
+                    style: const TextStyle(
+                      color: kPreviewForegroundEmphasis,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ],
-              ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '$w×$h',
+                  style: const TextStyle(
+                    color: kPreviewForeground,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-            if (isActive) ...[
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.check,
-                color: kPreviewForegroundEmphasis,
-                size: 16,
+            if (profile.description != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                profile.description!,
+                style: const TextStyle(color: kPreviewForeground),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ],
           ],
         ),
       ),
     );
+  }
+}
+
+// ── Shortcut button ───────────────────────────────────────────────────────────
+
+/// A compact bordered button that pairs an [icon] with a keyboard [binding]
+/// label, used in the control panel footer.
+class _ShortcutButton extends StatelessWidget {
+  const _ShortcutButton({
+    required this.icon,
+    required this.binding,
+    required this.onTap,
+    this.tooltip,
+  });
+
+  final IconData icon;
+  final String binding;
+  final VoidCallback onTap;
+  final String? tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget button = InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: kPreviewForeground.withValues(alpha: 0.25)),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: kPreviewForeground, size: 16),
+            const SizedBox(width: 6),
+            Text(binding, style: _monospace()),
+          ],
+        ),
+      ),
+    );
+    if (tooltip != null) {
+      button = Tooltip(message: tooltip!, child: button);
+    }
+    return button;
   }
 }
