@@ -23,16 +23,14 @@ const _kItemRadius = BorderRadius.all(Radius.circular(6));
 /// Keyboard modifier symbol for the current host platform.
 String get _modifier => Platform.isMacOS ? '⌘' : '^';
 
-/// Shape for the panel: top-right corner is flush with the window edge (same
-/// as the badge), all other corners are rounded.
+/// Shape for the panel: top-right and bottom-right corners are flush with the
+/// window edge (same as the badge); remaining corners are rounded.
 const _kPanelBorderRadius = BorderRadius.only(
   topLeft: Radius.circular(_kPanelRadius),
   bottomLeft: Radius.circular(_kPanelRadius),
-  bottomRight: Radius.circular(_kPanelRadius),
 );
 
-/// Floating panel that slides down from the [ControlBadge] in the top-right
-/// corner of the preview window.
+/// Floating panel that slides in from the right side of the preview window.
 ///
 /// Contains:
 /// 1. An action icon row (orientation toggle, passthrough toggle, shortcuts).
@@ -172,7 +170,7 @@ class _ControlPanelState extends State<ControlPanel>
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.35),
                 blurRadius: 8,
-                offset: const Offset(-2, 3),
+                offset: const Offset(2, 3),
               ),
             ],
           ),
