@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../preview_controller.dart';
+import '../theme.dart';
 
 /// Semi-transparent badge anchored to the top-right corner of the preview
 /// window.
@@ -26,6 +28,7 @@ class ControlBadge extends StatelessWidget {
 
   Widget _build(BuildContext context) {
     final dimmed = controller.passthroughMode;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -35,22 +38,30 @@ class ControlBadge extends StatelessWidget {
             bottomLeft: Radius.circular(10),
           ),
           child: ColoredBox(
-            color: Color.fromRGBO(96, 96, 104, dimmed ? 0.4 : 0.72),
+            color: kPreviewBackground.withValues(alpha: dimmed ? 0.4 : 0.8),
             child: Padding(
               padding: const EdgeInsets.only(
-                left: 10,
+                left: 8,
                 right: 8,
                 top: 4,
                 bottom: 5,
               ),
-              child: Text(
-                controller.activeProfile.name,
-                style: TextStyle(
-                  color: Color.fromRGBO(221, 221, 221, dimmed ? 0.5 : 1.0),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                ),
+              child: Row(
+                children: [
+                  const Icon(Icons.flight_takeoff, size: 12),
+                  const SizedBox(width: 6),
+                  Text(
+                    controller.activeProfile.name,
+                    style: TextStyle(
+                      color: kPreviewForeground.withValues(
+                        alpha: dimmed ? 0.5 : 1.0,
+                      ),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
