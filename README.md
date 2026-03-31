@@ -19,7 +19,8 @@ Add `flight_check` as a regular dependency:
 flutter pub add flight_check
 ```
 
-In your `main.dart`, call `FlightCheck.configure()` (_before_ `runApp`):
+In your `main.dart`, call `FlightCheck.configure()`; you want to it before the
+call to `runApp`():
 
 ```dart
 import 'package:flight_check/flight_check.dart';
@@ -31,10 +32,10 @@ void main() {
 }
 ```
 
-Then run your app as Flutter Desktop app on macOS, Linux, or Windows; the
-preview UI appears automatically. You can even leave the call in
-unconditionally; when doing a release build Flight Check is tree-shaken out at
-compile time.
+Then run your app as a regular Flutter Desktop app on macOS, Linux, or Windows;
+the preview UI appears automatically. You can even leave the call to
+`FlightCheck` in unconditionally; when doing a release build Flight Check is
+tree-shaken out at compile time.
 
 - **Release / profile builds** — tree-shaken out at compile time
 - **iOS / Android devices** — skipped at runtime so real-device debug sessions
@@ -60,8 +61,11 @@ compile time.
 | Google Pixel 10 | 411 × 923 | Large punch hole, 411 × 923 — covers Pixel 9 and 10 |
 | Google Pixel 10 Pro | 410 × 914 | High-DPR Pixel (3.125), 410 × 914 |
 | Samsung Galaxy A15 | 411 × 892 | Budget Samsung Infinity-U notch, 411 × 892 — covers A15, A25 |
-| Samsung Galaxy A55 | 384 × 854 | Mid-range Samsung A-series, ~384 × 854 — covers A54, A55 |
-| Samsung Galaxy S24 | 360 × 780 | Flagship Samsung, 360 × 780 — covers S23, S24 |
+| Samsung Galaxy A16 | 411 × 892 | Budget Samsung Infinity-U notch, 411 × 892 — covers A06, A16, M16 |
+| Samsung Galaxy A55 | 384 × 854 | Mid-range Samsung A-series, 384 × 854 — covers A54, A55 |
+| Samsung Galaxy A56 | 412 × 915 | Mid-range Samsung A-series, 412 × 915 — covers A36, A56 |
+| Samsung Galaxy S25 | 360 × 780 | Flagship Samsung S25, 360 × 780 — slightly rounder corners than S24/S26 |
+| Samsung Galaxy S26 | 360 × 780 | Flagship Samsung, 360 × 780 — covers S24, S26 |
 
 | Device | Size | Device category |
 | --- | --- | --- |

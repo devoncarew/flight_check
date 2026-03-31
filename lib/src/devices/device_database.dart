@@ -47,8 +47,11 @@ final List<DeviceProfile> kDeviceProfiles = [
   pixel_10,
   pixel_10_pro,
   samsung_galaxy_a15,
+  samsung_galaxy_a16,
   samsung_galaxy_a55,
-  samsung_galaxy_s24,
+  samsung_galaxy_a56,
+  samsung_galaxy_s25,
+  samsung_galaxy_s26,
 
   // Tablets
   ipad_mini_a17,
@@ -424,12 +427,40 @@ final samsung_galaxy_a15 = DeviceProfile(
   description: 'Budget Samsung Infinity-U notch, 411 × 892 — covers A15, A25',
 );
 
+// Samsung Galaxy A16 (SM-A165F/SM-A166B, released late 2024).
+// Same 1080×2340px panel as A15; DPR 2.625. Logical size: 411×892dp.
+// Corner radius: ~38dp — same panel as A15 (community approximation).
+// Notch: Infinity-U teardrop, slightly shallower than A15.
+//   width 44dp, height 28dp (1-2dp less than A15), bottomRadius 22dp,
+//   sideRadius 13dp (community approximation).
+// Safe area portrait: ~30dp (slightly lower than A15's 32dp to match shallower notch).
+// Safe area landscape: teardrop rotates to left edge; left ≈ 30dp.
+// Note: A16 receives 6 years of OS updates — a long-lived testing target.
+final samsung_galaxy_a16 = DeviceProfile(
+  id: 'samsung_galaxy_a16',
+  name: 'Samsung Galaxy A16',
+  platform: DevicePlatform.android,
+  logicalSize: const Size(411, 892),
+  safeAreaPortrait: const EdgeInsets.only(top: 30, bottom: 24),
+  safeAreaLandscape: const EdgeInsets.only(left: 30, bottom: 24),
+  screenBorder: const CircularBorder(38),
+  cutout: const TeardropCutout(
+    width: 44,
+    height: 28,
+    bottomRadius: 22,
+    sideRadius: 13,
+  ),
+  description:
+      'Budget Samsung Infinity-U notch, 411 × 892 — covers A06, A16, M16',
+);
+
 // Samsung Galaxy A55 (SM-A556B, released Mar 2024).
-// Corner radius: 94px / 2.625 DPR = 35.8 ≈ 36dp.
-// Punch hole: centered, horizontally.
-//   Camera radius 27px → diameter 54px / 2.625 = 20.6 ≈ 21dp.
-//   Camera center Y 65px / 2.625 = 24.8 ≈ 25dp from screen top.
-// Logical size and safe areas: community approximation — not yet verified.
+// Physical: 1080 × 2400 px. DPR: ~2.8125. Logical size: ~384 × 854 dp.
+// Corner radius: ~101px / 2.8125 ≈ 36dp — verified against hardware range.
+// Punch hole: centered horizontally.
+//   Camera diameter ~57px / 2.8125 ≈ 21dp — verified against hardware range.
+//   Camera center Y ~65px / 2.8125 ≈ 25dp from screen top.
+// Safe areas: community approximation.
 final samsung_galaxy_a55 = DeviceProfile(
   id: 'samsung_galaxy_a55',
   name: 'Samsung Galaxy A55',
@@ -439,24 +470,68 @@ final samsung_galaxy_a55 = DeviceProfile(
   safeAreaLandscape: const EdgeInsets.only(bottom: 24),
   screenBorder: const CircularBorder(36),
   cutout: const PunchHoleCutout(diameter: 21, topOffset: 25),
-  description: 'Mid-range Samsung A-series, ~384 × 854 — covers A54, A55',
+  description: 'Mid-range Samsung A-series, 384 × 854 — covers A54, A55',
 );
 
-// Samsung Galaxy S24: Samsung does not publish device-tree cutout geometry.
-// Corner radius: 94px / 3.0 DPR = 31.3 ≈ 31dp.
-// Punch hole: centered, horizontally.
-//   Camera radius 27px → diameter 54px / 3.0 = 18dp.
-//   Camera center Y 54px / 3.0 = 18dp from screen top.
-final samsung_galaxy_s24 = DeviceProfile(
-  id: 'samsung_galaxy_s24',
-  name: 'Samsung Galaxy S24',
+// Samsung Galaxy A56 (SM-A566B, released early 2025).
+// Physical: ~1080 × 2400 px. DPR: ~2.625–2.8x. Logical size: ~412 × 915 dp.
+// Slightly taller 20:9 aspect ratio and tighter corners than A55.
+//   Corner radius: 34dp (community approximation).
+//   Punch hole: centered horizontally.
+//     Camera diameter: 20dp. Camera center Y: 20dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_a56 = DeviceProfile(
+  id: 'samsung_galaxy_a56',
+  name: 'Samsung Galaxy A56',
+  platform: DevicePlatform.android,
+  logicalSize: const Size(412, 915),
+  safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
+  safeAreaLandscape: const EdgeInsets.only(bottom: 24),
+  screenBorder: const CircularBorder(34),
+  cutout: const PunchHoleCutout(diameter: 20, topOffset: 20),
+  description: 'Mid-range Samsung A-series, 412 × 915 — covers A36, A56',
+);
+
+// Samsung Galaxy S26: Samsung does not publish device-tree cutout geometry.
+// Physical: 1080 × 2340 px. DPR: 3.0. Logical size: 360 × 780 dp.
+// Geometry sourced from Galaxy S26 emulator skin; S24 shares the same values
+// (S25 was a one-generation departure with a slightly larger corner radius):
+//   Corner radius: 94px / 3.0 = 31.3 ≈ 31dp.
+//   Punch hole: centered horizontally, center at (540, 54)px.
+//     Camera radius 24px → diameter 48px / 3.0 = 16dp.
+//     Camera center Y: 54px / 3.0 = 18dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_s26 = DeviceProfile(
+  id: 'samsung_galaxy_s26',
+  name: 'Samsung Galaxy S26',
   platform: DevicePlatform.android,
   logicalSize: const Size(360, 780),
   safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
   safeAreaLandscape: const EdgeInsets.only(bottom: 24),
   screenBorder: const CircularBorder(31),
-  cutout: const PunchHoleCutout(diameter: 18, topOffset: 18),
-  description: 'Flagship Samsung, 360 × 780 — covers S23, S24',
+  cutout: const PunchHoleCutout(diameter: 16, topOffset: 18),
+  description: 'Flagship Samsung, 360 × 780 — covers S24, S26',
+);
+
+// Samsung Galaxy S25: one-generation departure from the S24/S26 geometry.
+// Physical: 1080 × 2340 px. DPR: 3.0. Logical size: 360 × 780 dp.
+// Geometry sourced from Galaxy S25 emulator skin:
+//   Corner radius: 101px / 3.0 = 33.7 ≈ 34dp.
+//   Punch hole: centered horizontally, center at (540, 57)px.
+//     Camera radius 24px → diameter 48px / 3.0 = 16dp.
+//     Camera center Y: 57px / 3.0 = 19dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_s25 = DeviceProfile(
+  id: 'samsung_galaxy_s25',
+  name: 'Samsung Galaxy S25',
+  platform: DevicePlatform.android,
+  logicalSize: const Size(360, 780),
+  safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
+  safeAreaLandscape: const EdgeInsets.only(bottom: 24),
+  screenBorder: const CircularBorder(34),
+  cutout: const PunchHoleCutout(diameter: 16, topOffset: 19),
+  description:
+      'Flagship Samsung S25, 360 × 780 — slightly rounder corners than S24/S26',
 );
 
 // ── Tablets ──────────────────────────────────────────────────────────────
