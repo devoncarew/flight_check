@@ -48,6 +48,7 @@ final List<DeviceProfile> kDeviceProfiles = [
   pixel_10_pro,
   samsung_galaxy_a15,
   samsung_galaxy_a55,
+  samsung_galaxy_a56,
   samsung_galaxy_s25,
   samsung_galaxy_s26,
 
@@ -426,11 +427,12 @@ final samsung_galaxy_a15 = DeviceProfile(
 );
 
 // Samsung Galaxy A55 (SM-A556B, released Mar 2024).
-// Corner radius: 94px / 2.625 DPR = 35.8 ≈ 36dp.
-// Punch hole: centered, horizontally.
-//   Camera radius 27px → diameter 54px / 2.625 = 20.6 ≈ 21dp.
-//   Camera center Y 65px / 2.625 = 24.8 ≈ 25dp from screen top.
-// Logical size and safe areas: community approximation — not yet verified.
+// Physical: 1080 × 2400 px. DPR: ~2.8125. Logical size: ~384 × 854 dp.
+// Corner radius: ~101px / 2.8125 ≈ 36dp — verified against hardware range.
+// Punch hole: centered horizontally.
+//   Camera diameter ~57px / 2.8125 ≈ 21dp — verified against hardware range.
+//   Camera center Y ~65px / 2.8125 ≈ 25dp from screen top.
+// Safe areas: community approximation.
 final samsung_galaxy_a55 = DeviceProfile(
   id: 'samsung_galaxy_a55',
   name: 'Samsung Galaxy A55',
@@ -440,7 +442,26 @@ final samsung_galaxy_a55 = DeviceProfile(
   safeAreaLandscape: const EdgeInsets.only(bottom: 24),
   screenBorder: const CircularBorder(36),
   cutout: const PunchHoleCutout(diameter: 21, topOffset: 25),
-  description: 'Mid-range Samsung A-series, ~384 × 854 — covers A54, A55',
+  description: 'Mid-range Samsung A-series, 384 × 854 — covers A54, A55',
+);
+
+// Samsung Galaxy A56 (SM-A566B, released early 2025).
+// Physical: ~1080 × 2400 px. DPR: ~2.625–2.8x. Logical size: ~412 × 915 dp.
+// Slightly taller 20:9 aspect ratio and tighter corners than A55.
+//   Corner radius: 34dp (community approximation).
+//   Punch hole: centered horizontally.
+//     Camera diameter: 20dp. Camera center Y: 20dp from screen top.
+// Safe areas: community approximation.
+final samsung_galaxy_a56 = DeviceProfile(
+  id: 'samsung_galaxy_a56',
+  name: 'Samsung Galaxy A56',
+  platform: DevicePlatform.android,
+  logicalSize: const Size(412, 915),
+  safeAreaPortrait: const EdgeInsets.only(top: 24, bottom: 24),
+  safeAreaLandscape: const EdgeInsets.only(bottom: 24),
+  screenBorder: const CircularBorder(34),
+  cutout: const PunchHoleCutout(diameter: 20, topOffset: 20),
+  description: 'Mid-range Samsung A-series, 412 × 915 — covers A36, A56',
 );
 
 // Samsung Galaxy S26: Samsung does not publish device-tree cutout geometry.
