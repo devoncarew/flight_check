@@ -32,7 +32,7 @@ void main() {
 }
 ```
 
-Then run your app as regular Flutter Desktop app on macOS, Linux, or Windows;
+Then run your app as a regular Flutter Desktop app on macOS, Linux, or Windows;
 the preview UI appears automatically. You can even leave the call to
 `FlightCheck` in unconditionally; when doing a release build Flight Check is
 tree-shaken out at compile time.
