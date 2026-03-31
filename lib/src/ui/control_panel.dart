@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,10 @@ import '../preview_controller.dart';
 import '../theme.dart';
 
 /// Width of the control panel card.
-const double _kPanelWidth = 310;
+const double _kPanelWidth = 315;
+
+/// Width of the control panel card.
+const double _kPanelHeight = 565;
 
 /// Corner radius used for all non-flush panel corners.
 const double _kPanelRadius = 10;
@@ -41,28 +45,23 @@ class ControlPanel extends StatefulWidget {
 }
 
 class _ControlPanelState extends State<ControlPanel>
-    with TickerProviderStateMixin {
-  late final TabController _tabController;
+    with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
   late final Animation<double> _slideAnim;
 
   bool _shortcutsExpanded = false;
+  late int _selectedTab;
 
   @override
   void initState() {
     super.initState();
 
     final profile = widget.controller.activeProfile;
-    final initialIndex = profile.tablet
+    _selectedTab = profile.tablet
         ? 2
         : profile.platform == DevicePlatform.android
         ? 1
         : 0;
-    _tabController = TabController(
-      length: 3,
-      vsync: this,
-      initialIndex: initialIndex,
-    );
 
     _animController = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -93,13 +92,15 @@ class _ControlPanelState extends State<ControlPanel>
   @override
   void dispose() {
     widget.controller.removeListener(_onControllerChanged);
-    _tabController.dispose();
     _animController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxHeight =
+        MediaQuery.sizeOf(context).height - kControlBadgeHeight * 2 - 16;
+
     return AnimatedBuilder(
       animation: _animController,
       builder: (context, child) =>
@@ -125,10 +126,9 @@ class _ControlPanelState extends State<ControlPanel>
                   begin: const Offset(1, 0),
                   end: Offset.zero,
                 ).animate(_slideAnim),
-                child: _buildCard(
-                  maxHeight:
-                      MediaQuery.sizeOf(context).height * 2 / 3 -
-                      kControlBadgeHeight,
+                child: SizedBox(
+                  height: math.min(maxHeight, _kPanelHeight),
+                  child: _buildContents(context),
                 ),
               ),
             ),
@@ -138,7 +138,7 @@ class _ControlPanelState extends State<ControlPanel>
     );
   }
 
-  Widget _buildCard({required double maxHeight}) {
+  Widget _buildContents(BuildContext context) {
     final iOS = DeviceDatabase.all
         .where((d) => d.platform == DevicePlatform.iOS && !d.tablet)
         .toList();
@@ -147,88 +147,110 @@ class _ControlPanelState extends State<ControlPanel>
         .toList();
     final tablets = DeviceDatabase.all.where((d) => d.tablet).toList();
 
+    // SegmentedButton requires MaterialLocalizations; provide them here so the
+    // panel works even when no MaterialApp ancestor exists.
     return SizedBox(
       width: _kPanelWidth,
-      child: Material(
-        color: kPreviewBackground,
-        borderRadius: _kPanelBorderRadius,
-        child: ClipRRect(
+      child: Localizations(
+        locale: const Locale('en'),
+        delegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        child: Material(
+          color: kPreviewBackground,
           borderRadius: _kPanelBorderRadius,
-          // TabBar requires MaterialLocalizations; provide them here so the
-          // panel works even when no MaterialApp ancestor exists.
-          child: Localizations(
-            locale: const Locale('en'),
-            delegates: const [
-              DefaultMaterialLocalizations.delegate,
-              DefaultWidgetsLocalizations.delegate,
-            ],
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _ActionRow(
-                  controller: widget.controller,
-                  shortcutsExpanded: _shortcutsExpanded,
-                  onToggleShortcuts: () =>
-                      setState(() => _shortcutsExpanded = !_shortcutsExpanded),
-                ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeInOut,
-                  child: _shortcutsExpanded
-                      ? const _ShortcutsSection()
-                      : const SizedBox.shrink(),
-                ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: kPreviewForeground,
-                ),
-                Flexible(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: maxHeight),
-                    child: Column(
-                      children: [
-                        TabBar(
-                          controller: _tabController,
-                          tabs: const [
-                            Tab(text: 'iOS'),
-                            Tab(text: 'Android'),
-                            Tab(text: 'Tablets'),
-                          ],
-                          labelColor: kPreviewForegroundEmphasis,
-                          indicatorColor: kPreviewForegroundEmphasis,
-                          unselectedLabelColor: kPreviewForeground,
-                          dividerColor: const Color(0x22FFFFFF),
-                          tabAlignment: TabAlignment.fill,
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              _DeviceList(
-                                profiles: iOS,
-                                controller: widget.controller,
-                              ),
-                              _DeviceList(
-                                profiles: android,
-                                controller: widget.controller,
-                              ),
-                              _DeviceList(
-                                profiles: tablets,
-                                controller: widget.controller,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              _ActionRow(
+                controller: widget.controller,
+                shortcutsExpanded: _shortcutsExpanded,
+                onToggleShortcuts: () =>
+                    setState(() => _shortcutsExpanded = !_shortcutsExpanded),
+              ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeInOut,
+                child: _shortcutsExpanded
+                    ? const _ShortcutsSection()
+                    : const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: _createSegmentedButton(),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: IndexedStack(
+                  index: _selectedTab,
+                  alignment: AlignmentDirectional.topStart,
+                  children: [
+                    _DeviceList(profiles: iOS, controller: widget.controller),
+                    _DeviceList(
+                      profiles: android,
+                      controller: widget.controller,
                     ),
-                  ),
+                    _DeviceList(
+                      profiles: tablets,
+                      controller: widget.controller,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 12),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  SegmentedButton<int> _createSegmentedButton() {
+    return SegmentedButton<int>(
+      expandedInsets: EdgeInsets.zero,
+      segments: const [
+        ButtonSegment(
+          value: 0,
+          label: Text('iOS'),
+          icon: Icon(Icons.phone_iphone),
+        ),
+        ButtonSegment(
+          value: 1,
+          label: Text('Android'),
+          icon: Icon(Icons.phone_android),
+        ),
+        ButtonSegment(
+          value: 2,
+          label: Text('Tablets'),
+          icon: Icon(Icons.tablet),
+        ),
+      ],
+      selected: {_selectedTab},
+      onSelectionChanged: (s) => setState(() => _selectedTab = s.first),
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? kPreviewForegroundEmphasis
+              : kPreviewForeground,
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? const Color(0x33FFFFFF)
+              : Colors.transparent,
+        ),
+        side: WidgetStatePropertyAll(
+          BorderSide(color: kPreviewForeground.withValues(alpha: 0.3)),
+        ),
+        textStyle: const WidgetStatePropertyAll(TextStyle(fontSize: 12)),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6)),
+          ),
+        ),
+      ),
+      showSelectedIcon: false,
     );
   }
 }
@@ -373,7 +395,7 @@ class _DeviceList extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         return ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.zero,
           children: [
             for (final profile in profiles)
               _DeviceItem(
