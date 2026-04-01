@@ -348,6 +348,3 @@ device) and added `cycleDevice(int delta)` to `PreviewController`.
   and eliminating the lossy `SideCutout` conversion.
 + Add Samsung Galaxy S25 device profile (devoncarew/flight_check#62)
 + Add Samsung Galaxy A55 device profile (devoncarew/flight_check#61)
-- Use shorter device names in the control badge? (devoncarew/flight_check#101)
-- Consider supporting a locale override. (devoncarew/flight_check#102)
-- Determine whether we need the pass-through mode. (devoncarew/flight_check#103)
