@@ -13,7 +13,7 @@ at the binding layer (not via widget injection), provides a minimal floating UI 
 selection and orientation toggle, and auto-resizes the desktop window to fit the emulated
 device.
 
-Read `DESIGN.md` for the full architecture. Read `docs/PLAN.md` for the current task list.
+Read `docs/DESIGN.md` for the full architecture. Read `docs/PLAN.md` for the current task list.
 
 ---
 

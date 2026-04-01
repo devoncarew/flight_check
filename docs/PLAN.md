@@ -136,7 +136,7 @@ Add a note in the toolbar tooltip indicating which mode is active.
 
 Wrote `README.md` with a one-paragraph description, getting-started snippet, keyboard
 shortcuts table, supported devices table, and known limitations section sourced from
-`DESIGN.md`.
+`docs/DESIGN.md`.
 
 ---
 
@@ -227,7 +227,7 @@ platforms so `ThemeData` rebuilds.
 slide vs Material zoom), haptic feedback patterns, text-selection toolbar items,
 `VisualDensity`.
 
-**Known limitations (documented in `DESIGN.md`):** keyboard shortcuts may break when
+**Known limitations (documented in `docs/DESIGN.md`):** keyboard shortcuts may break when
 the host OS and emulated platform differ; back-navigation platform assumptions cannot
 be satisfied on desktop; platform switch resets ephemeral widget state via reassemble.
 
@@ -346,7 +346,8 @@ device) and added `cycleDevice(int delta)` to `PreviewController`.
   portrait `buildPath()`, and the painter applies a single rotation transform
   for landscape — fixing iPhone 14 and Samsung A15 landscape notch rendering
   and eliminating the lossy `SideCutout` conversion.
-- Add Samsung Galaxy S25 device profile (devoncarew/flight_check#62)
-- Add Samsung Galaxy A55 device profile (devoncarew/flight_check#61)
-- Consider supporting a locale override.
-- Determine whether we need the pass-through mode.
++ Add Samsung Galaxy S25 device profile (devoncarew/flight_check#62)
++ Add Samsung Galaxy A55 device profile (devoncarew/flight_check#61)
+- Use shorter device names in the control badge? (devoncarew/flight_check#101)
+- Consider supporting a locale override. (devoncarew/flight_check#102)
+- Determine whether we need the pass-through mode. (devoncarew/flight_check#103)
