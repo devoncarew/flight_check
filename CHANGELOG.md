@@ -1,4 +1,4 @@
-## 1.1.0-wip
+## 1.1.0
 
 * Added `shortName` field to `DeviceProfile` for compact display in the control
   badge (e.g. `'Pixel 10'` instead of `'Google Pixel 10'`). The badge shows the
