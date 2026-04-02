@@ -325,6 +325,21 @@ class _ActionRow extends StatelessWidget {
               style: TextStyle(color: kPreviewForegroundEmphasis),
             ),
           ),
+          ListenableBuilder(
+            listenable: controller,
+            builder: (context, _) {
+              final icon = controller.brightnessOverride == Brightness.dark
+                  ? Icons.dark_mode
+                  : Icons.light_mode;
+              return _ShortcutButton(
+                icon: icon,
+                binding: '${_modifier}B',
+                tooltip: 'Toggle theme',
+                onTap: controller.toggleBrightnessOverride,
+              );
+            },
+          ),
+          const SizedBox(width: 8),
           _ShortcutButton(
             icon: Icons.screen_rotation,
             binding: '${_modifier}L',

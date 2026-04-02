@@ -17,6 +17,11 @@ class ToggleOrientationIntent extends Intent {
   const ToggleOrientationIntent();
 }
 
+/// Fired by `Cmd+B` / `Ctrl+B` — cycles the brightness override.
+class ToggleBrightnessIntent extends Intent {
+  const ToggleBrightnessIntent();
+}
+
 /// Fired by `Cmd+]` / `Ctrl+]` — advances to the next device.
 class NextDeviceIntent extends Intent {
   const NextDeviceIntent();
@@ -60,6 +65,11 @@ class PreviewShortcuts extends StatelessWidget {
           control: !useMeta,
         ): const ToggleOrientationIntent(),
         SingleActivator(
+          LogicalKeyboardKey.keyB,
+          meta: useMeta,
+          control: !useMeta,
+        ): const ToggleBrightnessIntent(),
+        SingleActivator(
           LogicalKeyboardKey.bracketRight,
           meta: useMeta,
           control: !useMeta,
@@ -77,6 +87,9 @@ class PreviewShortcuts extends StatelessWidget {
           ),
           ToggleOrientationIntent: CallbackAction<ToggleOrientationIntent>(
             onInvoke: (_) => controller.toggleOrientation(),
+          ),
+          ToggleBrightnessIntent: CallbackAction<ToggleBrightnessIntent>(
+            onInvoke: (_) => controller.toggleBrightnessOverride(),
           ),
           NextDeviceIntent: CallbackAction<NextDeviceIntent>(
             onInvoke: (_) => controller.cycleDevice(1),

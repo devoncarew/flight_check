@@ -20,6 +20,7 @@ class PreviewPlatformDispatcher implements ui.PlatformDispatcher {
   late final PreviewFlutterView _previewView = PreviewFlutterView(
     _real.views.first,
     _controller,
+    this,
   );
 
   // ── Spoofed members ───────────────────────────────────────────────────────
@@ -105,12 +106,25 @@ class PreviewPlatformDispatcher implements ui.PlatformDispatcher {
   set onTextScaleFactorChanged(ui.VoidCallback? value) =>
       _real.onTextScaleFactorChanged = value;
 
+  ui.VoidCallback? _onPlatformBrightnessChanged;
+
   @override
   ui.VoidCallback? get onPlatformBrightnessChanged =>
       _real.onPlatformBrightnessChanged;
+
+  /// Wraps the framework's [onPlatformBrightnessChanged] callback so we can
+  /// fire it ourselves when [PreviewController.brightnessOverride] changes.
   @override
-  set onPlatformBrightnessChanged(ui.VoidCallback? value) =>
-      _real.onPlatformBrightnessChanged = value;
+  set onPlatformBrightnessChanged(ui.VoidCallback? value) {
+    _onPlatformBrightnessChanged = value;
+    _real.onPlatformBrightnessChanged = value;
+  }
+
+  /// Fires the framework's [onPlatformBrightnessChanged] callback.
+  ///
+  /// Called by [PreviewBinding] when the brightness override changes, so that
+  /// the framework re-reads [platformBrightness] and rebuilds.
+  void notifyBrightnessChanged() => _onPlatformBrightnessChanged?.call();
 
   @override
   ui.VoidCallback? get onSystemFontFamilyChanged =>
@@ -211,7 +225,7 @@ class PreviewPlatformDispatcher implements ui.PlatformDispatcher {
   bool get brieflyShowPassword => _real.brieflyShowPassword;
 
   @override
-  ui.Brightness get platformBrightness => _real.platformBrightness;
+  ui.Brightness get platformBrightness => _controller.brightnessOverride;
 
   @override
   String? get systemFontFamily => _real.systemFontFamily;

@@ -1,3 +1,5 @@
+import 'dart:ui' show Brightness;
+
 import 'package:flutter/foundation.dart'
     show TargetPlatform, debugDefaultTargetPlatformOverride;
 import 'package:flutter/widgets.dart' show Widget, WidgetsFlutterBinding;
@@ -61,7 +63,7 @@ class PreviewBinding extends WidgetsFlutterBinding {
       windowManager.ensureInitialized(),
     );
 
-    // Restore the last-selected device and orientation, if any.
+    // Restore the last-selected device, orientation, and brightness, if any.
     final savedId = loadLastDeviceId();
     if (savedId != null) {
       final profile = DeviceDatabase.findById(savedId);
@@ -71,6 +73,10 @@ class PreviewBinding extends WidgetsFlutterBinding {
     if (savedOrientation != null &&
         savedOrientation != _controller.orientation) {
       _controller.toggleOrientation();
+    }
+    final savedBrightness = loadLastBrightness();
+    if (savedBrightness != null) {
+      _controller.setBrightnessOverride(savedBrightness);
     }
 
     // Apply the platform override now, before runApp, so that ThemeData is
@@ -85,15 +91,30 @@ class PreviewBinding extends WidgetsFlutterBinding {
   String? _lastSavedProfileId;
   DeviceOrientation? _lastSavedOrientation;
   DevicePlatform? _lastEmulatedPlatform;
+  Brightness _lastBrightnessOverride = Brightness.dark;
 
   void _onControllerChanged() {
-    // Persist device ID and orientation when either changes.
+    // Persist device ID, orientation, and brightness when any changes.
     final id = _controller.activeProfile.id;
     final orientation = _controller.orientation;
-    if (id != _lastSavedProfileId || orientation != _lastSavedOrientation) {
+    final brightness = _controller.brightnessOverride;
+    if (id != _lastSavedProfileId ||
+        orientation != _lastSavedOrientation ||
+        brightness != _lastBrightnessOverride) {
       _lastSavedProfileId = id;
       _lastSavedOrientation = orientation;
-      saveSettings(deviceId: id, orientation: orientation);
+      saveSettings(
+        deviceId: id,
+        orientation: orientation,
+        brightness: brightness,
+      );
+    }
+
+    // Notify the framework when the brightness override changes so it re-reads
+    // platformBrightness and rebuilds theme-sensitive widgets.
+    if (brightness != _lastBrightnessOverride) {
+      _lastBrightnessOverride = brightness;
+      _previewDispatcher.notifyBrightnessChanged();
     }
 
     // Update the platform override when the emulated platform changes (e.g.

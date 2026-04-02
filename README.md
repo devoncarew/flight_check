@@ -46,27 +46,27 @@ tree-shaken out at compile time.
 
 | Device | Size | Device category |
 | --- | --- | --- |
-| iPhone SE (3rd gen) | 375x667 | Flat-edge, no cutout, small screen — budget / upgrade path |
-| iPhone 14 | 390x844 | Notch, 390×844 — covers iPhone 12, 13, 14 |
-| iPhone 15 | 393x852 | Dynamic Island, 393×852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e |
-| iPhone 15 Pro Max | 430x932 | Dynamic Island, 430×932 — covers iPhone 15 Plus, 16 Plus |
-| iPhone 17 | 402x874 | Current standard iPhone, 402×874 — same geometry as iPhone 17 Pro |
-| iPhone 17 Air | 420x912 | Dynamic Island, 420×912 — iPhone 17 Air |
-| iPhone 17 Pro | 402x874 | Dynamic Island, 402×874 — covers iPhone 16 Pro, 17 Pro |
-| iPhone 17 Pro Max | 440x956 | Largest iPhone screen, 440×956 |
+| iPhone&nbsp;SE&nbsp;(3rd&nbsp;gen) | 375x667 | Flat-edge, no cutout, small screen — budget / upgrade path |
+| iPhone&nbsp;14 | 390x844 | Notch, 390×844 — covers iPhone 12, 13, 14 |
+| iPhone&nbsp;15 | 393x852 | Dynamic Island, 393×852 — proxy for iPhone 14 Pro, 15 Pro, 16, 16e |
+| iPhone&nbsp;15&nbsp;Pro&nbsp;Max | 430x932 | Dynamic Island, 430×932 — covers iPhone 15 Plus, 16 Plus |
+| iPhone&nbsp;17 | 402x874 | Current standard iPhone, 402×874 — same geometry as iPhone 17 Pro |
+| iPhone&nbsp;17&nbsp;Air | 420x912 | Dynamic Island, 420×912 — iPhone 17 Air |
+| iPhone&nbsp;17&nbsp;Pro | 402x874 | Dynamic Island, 402×874 — covers iPhone 16 Pro, 17 Pro |
+| iPhone&nbsp;17&nbsp;Pro&nbsp;Max | 440x956 | Largest iPhone screen, 440×956 |
 | &nbsp; | | |
-| Google Pixel 7a | 411x914 | Mid-range Pixel, small punch hole — covers Pixel 7a, 8, 8a |
-| Google Pixel 10 | 411x923 | Large punch hole, 411×923 — covers Pixel 9 and 10 |
-| Google Pixel 10 Pro | 410x914 | High-DPR Pixel (3.125), 410×914 |
-| Samsung Galaxy A15 | 411x892 | Budget Samsung Infinity-U notch, 411×892 — covers A15, A25 |
-| Samsung Galaxy A16 | 411x892 | Budget Samsung Infinity-U notch, 411×892 — covers A06, A16, M16 |
-| Samsung Galaxy A55 | 384x854 | Mid-range Samsung A-series, 384×854 — covers A54, A55 |
-| Samsung Galaxy A56 | 412x915 | Mid-range Samsung A-series, 412×915 — covers A36, A56 |
-| Samsung Galaxy S25 | 360x780 | Flagship Samsung S25, 360×780 — slightly rounder corners than S24/S26 |
-| Samsung Galaxy S26 | 360x780 | Flagship Samsung, 360×780 — covers S24, S26 |
+| Google&nbsp;Pixel&nbsp;7a | 411x914 | Mid-range Pixel, small punch hole — covers Pixel 7a, 8, 8a |
+| Google&nbsp;Pixel&nbsp;10 | 411x923 | Large punch hole, 411×923 — covers Pixel 9 and 10 |
+| Google&nbsp;Pixel&nbsp;10&nbsp;Pro | 410x914 | High-DPR Pixel (3.125), 410×914 |
+| Samsung&nbsp;Galaxy&nbsp;A15 | 411x892 | Budget Samsung Infinity-U notch, 411×892 — covers A15, A25 |
+| Samsung&nbsp;Galaxy&nbsp;A16 | 411x892 | Budget Samsung Infinity-U notch, 411×892 — covers A06, A16, M16 |
+| Samsung&nbsp;Galaxy&nbsp;A55 | 384x854 | Mid-range Samsung A-series, 384×854 — covers A54, A55 |
+| Samsung&nbsp;Galaxy&nbsp;A56 | 412x915 | Mid-range Samsung A-series, 412×915 — covers A36, A56 |
+| Samsung&nbsp;Galaxy&nbsp;S25 | 360x780 | Flagship Samsung S25, 360×780 — slightly rounder corners than S24/S26 |
+| Samsung&nbsp;Galaxy&nbsp;S26 | 360x780 | Flagship Samsung, 360×780 — covers S24, S26 |
 | &nbsp; | | |
-| iPad mini (A17 Pro) | 744x1133 | Compact iPad, 744×1133 |
-| iPad (A16) | 820x1180 | Standard iPad, 820×1180 |
+| iPad&nbsp;mini&nbsp;(A17&nbsp;Pro) | 744x1133 | Compact iPad, 744×1133 |
+| iPad&nbsp;(A16) | 820x1180 | Standard iPad, 820×1180 |
 
 ### Screenshots
 
