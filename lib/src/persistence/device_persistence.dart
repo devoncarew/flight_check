@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'dart:ui' show Brightness;
+
 import '../devices/device_profile.dart';
 
 const _kDeviceKey = 'lastDevice';
 const _kOrientationKey = 'lastOrientation';
+const _kBrightnessKey = 'lastBrightness';
 
 /// Returns the settings file path.
 ///
@@ -76,6 +79,24 @@ DeviceOrientation? loadLastOrientation() {
   }
 }
 
+/// Reads the last-used brightness from the settings file.
+///
+/// Returns `null` if absent or unreadable.
+Brightness? loadLastBrightness() {
+  try {
+    final file = _settingsFile();
+    if (file == null) return null;
+    final value = _readJson(file)[_kBrightnessKey] as String?;
+    return switch (value) {
+      'dark' => Brightness.dark,
+      'light' => Brightness.light,
+      _ => null,
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
 /// Persists [id] and [orientation] to the settings file.
 ///
 /// Reads the existing file before writing so that any other fields in the
@@ -84,6 +105,7 @@ DeviceOrientation? loadLastOrientation() {
 void saveSettings({
   required String deviceId,
   required DeviceOrientation orientation,
+  required Brightness brightness,
 }) {
   try {
     final file = _settingsFile();
@@ -92,6 +114,9 @@ void saveSettings({
     final settings = _readJson(file);
     settings[_kDeviceKey] = deviceId;
     settings[_kOrientationKey] = orientation.name;
+    settings[_kBrightnessKey] = brightness == Brightness.dark
+        ? 'dark'
+        : 'light';
 
     // The $HOME/.config directory might not exist in some situations (on MacOS,
     // flutter run -d macos is sandboxed into an app specific directory).

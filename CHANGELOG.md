@@ -3,6 +3,9 @@
 * Added `shortName` field to `DeviceProfile` for compact display in the control
   badge (e.g. `'Pixel 10'` instead of `'Google Pixel 10'`). The badge shows the
   short name when the panel is closed, and the full name when it is open.
+* Added brightness (dark/light) toggle to the control panel (`⌘B` / `Ctrl+B`).
+  The emulated device always reports an explicit brightness — dark by default —
+  independent of the host system setting. The choice persists between sessions.
 
 ## 1.0.0
 

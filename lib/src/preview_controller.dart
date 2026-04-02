@@ -1,3 +1,5 @@
+import 'dart:ui' show Brightness;
+
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:flutter/painting.dart' show EdgeInsets, Size;
 
@@ -31,6 +33,7 @@ class PreviewController extends ChangeNotifier {
 
   bool _passthroughMode = false;
   bool _devicePickerVisible = false;
+  Brightness _brightnessOverride = Brightness.dark;
 
   /// The currently active device profile.
   DeviceProfile get activeProfile => _activeProfile;
@@ -46,6 +49,9 @@ class PreviewController extends ChangeNotifier {
 
   /// Whether the device picker is currently open.
   bool get devicePickerVisible => _devicePickerVisible;
+
+  /// The brightness the emulated device reports.
+  Brightness get brightnessOverride => _brightnessOverride;
 
   /// The emulated logical screen size for the current profile and orientation.
   Size get emulatedLogicalSize =>
@@ -83,6 +89,21 @@ class PreviewController extends ChangeNotifier {
   void togglePassthrough() {
     _passthroughMode = !_passthroughMode;
     notifyListeners();
+  }
+
+  /// Sets the emulated brightness and notifies listeners.
+  void setBrightnessOverride(Brightness brightness) {
+    if (_brightnessOverride == brightness) return;
+    _brightnessOverride = brightness;
+    notifyListeners();
+  }
+
+  /// Toggles the emulated brightness between dark and light.
+  void toggleBrightnessOverride() {
+    setBrightnessOverride(switch (_brightnessOverride) {
+      Brightness.dark => Brightness.light,
+      Brightness.light => Brightness.dark,
+    });
   }
 
   /// Toggles the device picker visibility and notifies listeners.

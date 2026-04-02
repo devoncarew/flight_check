@@ -12,10 +12,11 @@ import '../preview_controller.dart';
 /// propagates correct [MediaQueryData] to the widget tree without any widget
 /// injection.
 class PreviewFlutterView implements ui.FlutterView {
-  PreviewFlutterView(this._real, this._controller);
+  PreviewFlutterView(this._real, this._controller, this._dispatcher);
 
   final ui.FlutterView _real;
   final PreviewController _controller;
+  final ui.PlatformDispatcher _dispatcher;
 
   // ── Spoofed members ───────────────────────────────────────────────────────
 
@@ -68,7 +69,7 @@ class PreviewFlutterView implements ui.FlutterView {
   // ── Delegated members ─────────────────────────────────────────────────────
 
   @override
-  ui.PlatformDispatcher get platformDispatcher => _real.platformDispatcher;
+  ui.PlatformDispatcher get platformDispatcher => _dispatcher;
 
   @override
   ui.ViewConstraints get physicalConstraints => _real.physicalConstraints;

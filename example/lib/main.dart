@@ -27,37 +27,21 @@ class FlightCheckExampleApp extends StatefulWidget {
 }
 
 class _FlightCheckExampleAppState extends State<FlightCheckExampleApp> {
-  ThemeMode _themeMode = ThemeMode.light;
-
-  void _toggleTheme() {
-    setState(() {
-      _themeMode = _themeMode == ThemeMode.light
-          ? ThemeMode.dark
-          : ThemeMode.light;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stellar',
-      themeMode: _themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: _HomePage(
-        isDark: _themeMode == ThemeMode.dark,
-        onToggleTheme: _toggleTheme,
-      ),
+      home: const _HomePage(),
     );
   }
 }
 
 class _HomePage extends StatefulWidget {
-  const _HomePage({required this.isDark, required this.onToggleTheme});
-
-  final bool isDark;
-  final VoidCallback onToggleTheme;
+  const _HomePage();
 
   @override
   State<_HomePage> createState() => _HomePageState();
@@ -73,10 +57,6 @@ class _HomePageState extends State<_HomePage> {
         title: const Text('Stellar'),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(widget.isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: widget.onToggleTheme,
-          ),
           IconButton(icon: Icon(Icons.adaptive.more), onPressed: () {}),
         ],
         actionsPadding: const EdgeInsets.symmetric(horizontal: 8),

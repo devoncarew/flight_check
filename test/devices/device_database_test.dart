@@ -55,9 +55,8 @@ void main() {
         first = false;
 
         for (final device in devices) {
-          print(
-            '| ${device.name} | ${size(device)} | ${device.description ?? ''} |',
-          );
+          final name = device.name.replaceAll(' ', '&nbsp;');
+          print('| $name | ${size(device)} | ${device.description ?? ''} |');
         }
       }
 

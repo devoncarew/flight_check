@@ -15,6 +15,7 @@ void main() {
     view = PreviewFlutterView(
       binding.platformDispatcher.implicitView!,
       controller,
+      binding.platformDispatcher,
     );
   });
 
