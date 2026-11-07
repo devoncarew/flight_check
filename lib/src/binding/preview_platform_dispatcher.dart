@@ -68,6 +68,11 @@ class PreviewPlatformDispatcher implements ui.PlatformDispatcher {
       _real.onPointerDataPacket = value;
 
   @override
+  ui.HitTestCallback? get onHitTest => _real.onHitTest;
+  @override
+  set onHitTest(ui.HitTestCallback? value) => _real.onHitTest = value;
+
+  @override
   ui.KeyDataCallback? get onKeyData => _real.onKeyData;
   @override
   set onKeyData(ui.KeyDataCallback? value) => _real.onKeyData = value;

@@ -1,3 +1,9 @@
+## 1.2.2
+
+- Require Flutter 3.47.0.
+- Implement `PlatformDispatcher.onHitTest` (added in Flutter 3.47), forwarding
+  to the real dispatcher.
+
 ## 1.2.1
 
 - Add Google Pixel 10a profile (covers Pixel 9a and 10a; 44dp corner radius,
