@@ -6,6 +6,11 @@ on:
     branches: [main]
   push:
     branches: [main]
+  # Run daily against the latest Flutter stable to catch breaking changes in
+  # new releases.
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,6 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: devoncarew/setup-flutter-action@v1
+        with:
+          channel: stable
 
       - run: flutter pub get
       - run: flutter analyze
