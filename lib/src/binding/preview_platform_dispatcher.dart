@@ -303,6 +303,9 @@ class PreviewPlatformDispatcher implements ui.PlatformDispatcher {
   void scheduleFrame() => _real.scheduleFrame();
 
   @override
+  void resetInternalState() => _real.resetInternalState();
+
+  @override
   void scheduleWarmUpFrame({
     required ui.VoidCallback beginFrame,
     required ui.VoidCallback drawFrame,

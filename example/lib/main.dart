@@ -1,4 +1,5 @@
 import 'package:flight_check/flight_check.dart';
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 
 const List<(IconData, String, String)> _discoveries = [

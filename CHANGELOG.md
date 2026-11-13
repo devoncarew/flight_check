@@ -1,3 +1,9 @@
+## 1.2.3
+
+- Require Flutter 3.50.0.
+- Implement `PlatformDispatcher.resetInternalState` (added in Flutter 3.50),
+  forwarding to the real dispatcher.
+
 ## 1.2.2
 
 - Require Flutter 3.47.0.
